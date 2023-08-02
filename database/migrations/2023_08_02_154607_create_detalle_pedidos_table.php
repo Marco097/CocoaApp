@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('detalle_pedidos', function (Blueprint $table) {
             $table->id();
-            $table->integer('cantidad',1000)->nullable(false)->change();
+            $table->integer('cantidad')->nullable();
             $table->decimal('precio_unitario', 5,2);  
             $table->decimal('descuento_obtenido', 5,2)->nullable(); 
             $table->unsignedBigInteger('producto_id'); 
