@@ -332,8 +332,8 @@ return [
                     'route'  => 'sabores.create',
                 ],
                 [
-                    'text' => 'Coberturas',
-                    'url'  => '',
+                    'text' => 'Toppings',
+                    'route'  => 'coberturas.create',
                 ],
                 [
                     'text' => 'Rellenos',

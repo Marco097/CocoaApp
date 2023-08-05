@@ -5,8 +5,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SaborController;
 use App\Http\Controllers\RellenoController;
 use App\Http\Controllers\PedidoController;
-
 use App\Http\Controllers\CatalogoController;
+use App\Http\Controllers\CoberturaController;
 use App\Http\Controllers\ProductoController;
 
 
@@ -35,6 +35,9 @@ Route::resource('productos', ProductoController::class);
 Route::resource('rellenos', RellenoController::class);
 Route::resource('pedidos', PedidoController::class);
 Route::resource('catalogos', CatalogoController::class);
+Route::resource('coberturas', CoberturaController::class);
+
+
 Route::put('pedidos/change',[PedidoController::class,'changeState']);
 Route::resource('rellenos', RellenoController::class);
 Route::get('/productos-reservas', [ProductoController::class, 'index']);

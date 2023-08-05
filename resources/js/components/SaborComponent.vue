@@ -31,9 +31,9 @@
                               <tr v-for="item in sabores" :key = "item.id" >
                                   <td>{{ item.nombre }}</td>
                                 <td>
-                                  <button type="button" class="btn btn-primary btn-sm" @click="showDialogEditar (item)">Editar</button>
+                                  <button class="btn btn-primary btn-sm" @click="showDialogEditar(item)">Editar</button>
                                   &nbsp;
-                                  <button type="button" class="btn btn-danger btn-sm" @click="eliminar (item)" eliminar >Eliminar</button>
+                                  <button class="btn btn-danger btn-sm" @click="eliminar(item)">Eliminar</button>
                                 </td>
                               </tr>
                             </tbody>
@@ -96,6 +96,12 @@
           },
           btnTitle(){
           return this.sabor.id == null ? "Guardar" : "Actualizar";
+          },
+        items()
+          {
+            return this.sabores.filter(item =>{
+              return item.nombre.toLowerCase().includes(this.seach.toLocaleLowerCase());
+            } )
           }
         },
           methods:{
@@ -118,6 +124,17 @@
                 }
             $('#saborModal').modal('show');
           },
+          hideDialog()
+      {
+        let me = this;
+        setTimeout(() =>{
+          me.sabor = {
+            id:null,
+            nombre:""
+          };
+        },300)
+        $('#saborModal').modal('hide');
+      },
           //metodo para editar un sabor
           showDialogEditar(sabor){
             let me = this;
@@ -125,22 +142,36 @@
             me.editedSabor = me.sabores.indexOf(sabor);
             me.sabor = Object.assign({}, sabor);
           },
-          //metodo para cerrar ventana de button (nuevo)
-          hideDialog(){
-            let me = this;
-            setTimeout(() =>{
-              me.sabor ={
-                id: null,
-                nombre: ""
-              };
-            }, 300)
-            $('#saborModal').modal('hide');
-  
-          },
           //este metodo es una meticion entonces tiene que ser async
         //metodo para guardar o actualizar
         async saveOrUpdate(){
-          let me = this;         //el de abajo es operrador ternario
+
+          let me = this;
+  me.saborErrors.nombre = false;
+  me.sabor.nombre = me.sabor.nombre.trim().toLowerCase(); // Convertir a minúsculas y eliminar espacios
+
+  if (!me.sabor.nombre) {
+    me.saborErrors.nombre = true;
+    return; // Detener el proceso si el nombre está vacío o solo contiene espacios
+  }
+
+  // Verificar si el nombre del sabor ya existe en la lista
+  const existingSabor = me.sabores.find(item => item.nombre.toLowerCase() === me.sabor.nombre);
+  if (existingSabor) {
+    me.saborErrors.nombre = true;
+    // Mostrar mensaje de error
+    this.$swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'El sabor ya existe en la lista.',
+      timer: 3000,
+      timerProgressBar: true,
+    });
+    return; // Detener el proceso si el nombre ya existe
+  }
+
+
+          //let me = this;         //el de abajo es operrador ternario
           me.sabor.nombre == ''  ? me.saborErrors.nombre = true :  me.saborErrors.nombre = false
           if(me.sabor.nombre){     //operador ternario
                         // variable accion sera de agregar (add) y si no que actualice (upd)  
@@ -149,9 +180,14 @@
               //guardar una marca (post en caso de agregar )
               await this.axios.post('/sabores', me.sabor)
               .then(response =>{
-                console.log(response.data);
-                me.verificarAccion(response.data.data,response.status,accion);
-                me.hideDialog();
+                //console.log(response.data);
+                if(response.status == 201)
+                  {
+                    me.verificarAccion(response.data.data,response.status,accion);
+                    me.hideDialog();
+                  }
+                //me.verificarAccion(response.data.data,response.status,accion);
+                //me.hideDialog();
               }).catch(errors =>{
                 console.log(errors);
               })
@@ -174,14 +210,14 @@
           async eliminar(sabor){
             let me = this;
             this.$swal.fire({
-              title: 'seguro/a de eliminar este registro?',
+              title: 'Seguro/a de eliminar este registro?',
               text: "No podras revertir la accion",
               icon: 'question',
               showCancelButton: true,
               confirmButtonColor: '#3085d6',
               cancelButtonColor: '#d33',
-              confirmButtonText: 'si',
-              cancelButtonText: 'no',
+              confirmButtonText: 'Si',
+              cancelButtonText: 'No',
             }).then((result) =>{
               if(result.value){
                 me.editedSabor = me.sabores.indexOf(sabor);
@@ -189,7 +225,7 @@
                 .then(response =>{
                   me.verificarAccion(null,response.status,"del");
                 }).catch(errors =>{
-                  console.log(errors);
+                  console.log(errors)
                 })
               }
             })
@@ -199,10 +235,10 @@
             let me = this;
             const Toast = this.$swal.mixin({
               toast:true,
-              position: 'top-end',
+              position: 'top-right',
               showConfirmButton:false,
               timer:2000,
-              timerProgressBar: true,
+              timerProgressBar: true
             });
             switch (accion){
               case "add":
@@ -221,23 +257,28 @@
                   });
                   break;
                   case "del":
-                    if(statusCode == 200) {
-                        me.sabores.splice(this.editedSabor, 1);
-                        //se envia mensaje final
-                        Toast.fire({
-                          icon: 'success',
-                          'title': 'sabor Eliminada...!!'
-                        });
-                      }else{
-                      Toast.fire({
-                        icon: 'warning',
-                        'title': 'Error al eliminar el sabor, intente de nuevo'
-                      });
-                    }
+                  if(statusCode == 200)
+                 {
+              try{
+                me.sabores.splice(me.editedSabor,1);
+                //se lanza el mensaje final
+                Toast.fire({
+                  icon: 'success',
+                 'title': 'Sabor Eliminado...!!!'
+                });
+              }catch(error)
+              {
+                console.log(error);
+              }
+            }else{
+              Toast.fire({
+                icon: 'warning',
+               'title': 'error al eliminar el sabor, intente de nuevo'
+              });
+            }
                     break;
               }
-          }
-  
+          },
         },
           mounted(){
             this.fetchSabores();

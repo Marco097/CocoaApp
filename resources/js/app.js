@@ -29,14 +29,20 @@ import RellenoComponent from './components/RellenoComponent.vue';
 import ProductoComponent from './components/ProductoComponent.vue';
 //import FormComponent from './components/pedidos/FormComponent.vue';
 import CatalogoComponent from './components/CatalogoComponent.vue';
+import CoberturaComponent from './components/CoberturaComponen.vue';
 //import PedidosList from './components/pedidos/PedidosList.vue';
+//import Paginacion from './components/pagination/Paginacion.vue' 
+
 app.component('example-component', ExampleComponent);
 app.component('sabor-component', SaborComponent);
 app.component('relleno-component', RellenoComponent);
 app.component('producto-component', ProductoComponent);
 //app.component('form-component', FormComponent);
 app.component('catalogo-component', CatalogoComponent);
+app.component('cobertura-component', CoberturaComponent);
 //app.component('pedidos-list', PedidosList);
+
+//app.component()
 
 /**
  * The following block of code may be used to automatically register your

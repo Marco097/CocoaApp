@@ -29,6 +29,7 @@ class CoberturaController extends Controller
     public function create()
     {
         //
+        return view('admin.coberturas');
     }
 
     /**
@@ -40,6 +41,7 @@ class CoberturaController extends Controller
         try{
             $cobertura = new Cobertura();
             $cobertura->nombre = $request->nombre;
+            $cobertura->precio = $request->precio;
            if ($cobertura->save() >= 1)
            {
             return response()->json(['status'=>'ok','data'=>$cobertura],201);
@@ -85,6 +87,7 @@ class CoberturaController extends Controller
         try{
             $cobertura = Cobertura::findOrFail($id);
             $cobertura->nombre = $request->nombre;
+            $cobertura->precio = $request->precio;
            if ($cobertura->update() >= 1)
            {
             return response()->json(['status'=>'ok','data'=>$cobertura],202);
@@ -105,7 +108,7 @@ class CoberturaController extends Controller
             $cobertura = Cobertura::findOrFail($id);
            if ($cobertura->delete() >= 1)
            {
-            return response()->json(['status'=>'ok','data'=>$cobertura],201);
+            return response()->json(['status'=>'ok','data'=>$cobertura],200);
            }
          } catch(\Exception $e)
                  {

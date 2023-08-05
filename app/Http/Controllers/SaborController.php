@@ -106,7 +106,7 @@ class SaborController extends Controller
             $sabor = Sabor::findOrFail($id);
            if ($sabor->delete() >= 1)
            {
-            return response()->json(['status'=>'ok','data'=>$sabor],201);
+            return response()->json(['status'=>'ok','data'=>$sabor],200);
            }
          } catch(\Exception $e)
                  {

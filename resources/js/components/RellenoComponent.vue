@@ -14,7 +14,7 @@
                     </div>
                     <div class="row">
                       <div class="input-group rounded">
-                        <input type="search" v-model="search" @input="" class="form-control rounded" placeholder="Buscar" arial-label="Search" aria-describedby="search-addon">
+                        <input type="search" v-model="search" @input="buscar" class="form-control rounded" placeholder="Buscar" arial-label="Search" aria-describedby="search-addon">
                       </div>
                     </div>
                   
@@ -31,9 +31,9 @@
                               <tr v-for="item in rellenos" :key = "item.id" >
                                   <td>{{ item.nombre }}</td>
                                 <td>
-                                  <button type="button" class="btn btn-primary btn-sm" @click="showDialogEditar (item)">Editar</button>
+                                  <button type="button" class="btn btn-primary btn-sm" @click="showDialogEditar(item)">Editar</button>
                                   &nbsp;
-                                  <button type="button" class="btn btn-danger btn-sm" @click="eliminar (item)" eliminar >Eliminar</button>
+                                  <button type="button" class="btn btn-danger btn-sm" @click="eliminar(item)">Eliminar</button>
                                 </td>
                               </tr>
                             </tbody>
@@ -79,7 +79,7 @@
                     id:null,
                     nombre: ""
                   },
-                  editedrelleno: -1,
+                  editedRelleno: -1,
                   rellenoErrors:{
                     nombre:false
                   },
@@ -96,7 +96,13 @@
           },
           btnTitle(){
           return this.relleno.id == null ? "Guardar" : "Actualizar";
-          }
+          },
+          items()
+      {
+        return this.marcas.filter(item =>{
+          return item.nombre.toLowerCase().includes(this.seach.toLocaleLowerCase());
+        } )
+      }
         },
           methods:{
                //para que no haga una peticion directa 
@@ -118,13 +124,6 @@
                 }
             $('#rellenoModal').modal('show');
           },
-          //metodo para editar un sabor
-          showDialogEditar(relleno){
-            let me = this;
-            $('#rellenoModal').modal('show');
-            me.editedRelleno = me.rellenos.indexOf(relleno);
-            me.relleno = Object.assign({}, relleno);
-          },
           //metodo para cerrar ventana de button (nuevo)
           hideDialog(){
             let me = this;
@@ -137,6 +136,14 @@
             $('#rellenoModal').modal('hide');
   
           },
+          //metodo para editar un sabor
+          showDialogEditar(relleno){
+            let me = this;
+            $('#rellenoModal').modal('show');
+            me.editedRelleno = me.rellenos.indexOf(relleno);
+            me.relleno = Object.assign({}, relleno);
+          },
+          
           //este metodo es una meticion entonces tiene que ser async
         //metodo para guardar o actualizar
         async saveOrUpdate(){
@@ -150,8 +157,11 @@
               await this.axios.post('/rellenos', me.relleno)
               .then(response =>{
                 console.log(response.data);
-                me.verificarAccion(response.data.data,response.status,accion);
-                me.hideDialog();
+                if(response.status == 201)
+                  {
+                    me.verificarAccion(response.data.data,response.status,accion);
+                    me.hideDialog();
+                  }
               }).catch(errors =>{
                 console.log(errors);
               })
@@ -180,8 +190,8 @@
               showCancelButton: true,
               confirmButtonColor: '#3085d6',
               cancelButtonColor: '#d33',
-              confirmButtonText: 'si',
-              cancelButtonText: 'no',
+              confirmButtonText: 'Si',
+              cancelButtonText: 'No',
             }).then((result) =>{
               if(result.value){
                 me.editedRelleno = me.rellenos.indexOf(relleno);
@@ -202,7 +212,7 @@
               position: 'top-end',
               showConfirmButton:false,
               timer:2000,
-              timerProgressBar: true,
+              timerProgressBar: true
             });
             switch (accion){
               case "add":
@@ -221,27 +231,33 @@
                   });
                   break;
                   case "del":
-                    if(statusCode == 200) {
-                        me.rellenos.splice(this.editedRelleno, 1);
-                        //se envia mensaje final
-                        Toast.fire({
-                          icon: 'success',
-                          'title': 'relleno se Elimino..'
-                        });
-                      }else{
-                      Toast.fire({
-                        icon: 'warning',
-                        'title': 'Error al eliminar el relleno, intente de nuevo'
-                      });
-                    }
+                  if(statusCode == 200)
+            {
+              try{
+                me.rellenos.splice(me.editedRelleno,1);
+                //se lanza el mensaje final
+                Toast.fire({
+                  icon: 'success',
+                 'title': 'Relleno Eliminado...!!!'
+                });
+              }catch(error)
+              {
+                console.log(error);
+              }
+            }else{
+              Toast.fire({
+                icon: 'warning',
+               'title': 'error al eliminar el Relleno, intente de nuevo'
+              });
+            }
                     break;
               }
-          }
+          },
   
         },
           mounted(){
             this.fetchRellenos();
-          },
+          }
       }
       
   </script>
