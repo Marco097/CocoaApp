@@ -366,6 +366,12 @@ return [
                 ],
             ],
         ],
+        [
+            'text'        => 'Banco',
+            'route'         => 'bancos.create',
+            'icon_color'        => 'primary',
+            'icon' => 'fas fw fa-home',
+        ],
     ],
 
     /*

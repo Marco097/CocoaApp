@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 use App\Models\Producto;
+use App\Models\ProductoCobertura;
+use App\Models\ProductoPromocion;
 use App\Models\ProductoSabor;
 use Illuminate\Http\Request;
 
@@ -23,7 +25,11 @@ class ProductoController extends Controller
                 if ($producto->relleno) {
                     $response[$i]["relleno"] = $producto->relleno->toArray();
                 }
-                $response[$i]["catalogo"] = $producto->catalogo->toArray();               
+                $response[$i]["catalogo"] = $producto->catalogo->toArray(); 
+                $response[$i]["sabor"] = $producto->sabor->toArray();
+                $response[$i]["promocion"] = $producto->promocion->toArray();  
+                $response[$i]["cobertura"] = $producto->cobertura->toArray(); 
+                
                 $i++;
             }
             
@@ -64,8 +70,8 @@ class ProductoController extends Controller
             $producto->hecho = $request->hecho;
             $producto->vencimiento = $request->vencimiento;
             //$producto->imagen = $request->imagen;
-            $producto->relleno_id = $request->relleno_id;
-            $producto->catalogo_id = $request->catalogo_id;
+            $producto->relleno_id = $request->input('relleno.id');;
+            $producto->catalogo_id = $request->input('catalogo.id');
             
             //comprovando si viene una imagen
             if($request->hasFile('imagen')){
@@ -84,18 +90,52 @@ class ProductoController extends Controller
             {
                 $errores++;
             }
-            $sabor = $request->productoSabor;
-            foreach($sabor as $key => $sb)
+            // Guardar las relaciones con sabores
+            $sabore = $request->sabores;
+            if (!is_null($sabore) && is_array($sabore)) 
             {
-                $productoSabor = ProductoSabor::findOrFail($sb['id']);
-                $productoSabor->sabor_id = $sb['sabor']['id'];
-                $productoSabor->producto_id = $producto->id;
-                
-                if($productoSabor->save()<=0)
-                {
-                    $errores++;
+                foreach ($sabore as $key => $sb) {
+                    $productoSabor = new ProductoSabor();
+                    $productoSabor->sabor_id = $sb['id'];
+                    $productoSabor->producto_id = $producto->id;
+    
+                    if ($productoSabor->save() <= 0) {
+                        $errores++;
+                    }
                 }
             }
+            //guardando la relcion de promociones 
+            $promocio = $request->promociones;
+            if (!is_null($promocio) && is_array($promocio)) 
+            {
+                foreach ($promocio as $key => $promo) {
+                    $productoPromocion = new ProductoPromocion();
+                    $productoPromocion->promocion_id = $promo['id'];
+                    $productoPromocion->producto_id = $producto->id;
+    
+                    if ($productoPromocion->save() <= 0) {
+                        $errores++;
+                    }
+                }
+            }
+            //GUARDANDO LA COBERTURA
+            
+            $cobertu = $request->coberturas;
+            if (!is_null($cobertu) && is_array($cobertu))
+            {
+                foreach ($cobertu as $key => $cob) {
+                    $productoCobertura = new ProductoCobertura();
+                    $productoCobertura->cobertura_id = $cob['id'];
+                    $productoCobertura->producto_id = $producto->id;
+    
+                    if ($productoCobertura->save() <= 0) {
+                        $errores++;
+                    }
+                }
+            }
+
+        
+
             if($producto->save()>= 1)
             {
                 return response()->json(['status'=>'ok','data'=>$producto],201);
@@ -120,6 +160,9 @@ class ProductoController extends Controller
             $response = $producto->toArray();   
             $response["relleno"]= $producto->relleno->toArray();
             $response["catalogo"]= $producto->catalogo->toArray();
+            $response["sabor"] = $producto->sabor->toArray();
+            $response["promocion"] = $producto->promocion->toArray();  
+            $response["cobertura"] = $producto->cobertura->toArray(); 
             return $response;
         }catch(\Exception $e){
             return $e->getMessage();

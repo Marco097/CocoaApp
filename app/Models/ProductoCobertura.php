@@ -9,7 +9,7 @@ class ProductoCobertura extends Model
 {
     use HasFactory;
 
-    protected $table = "productos_coberturas";
+    protected $table = "producto_coberturas";
 
             //relaciones inversas
             public function cobertura()

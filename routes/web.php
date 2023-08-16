@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\BancoController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -36,6 +38,7 @@ Route::resource('rellenos', RellenoController::class);
 Route::resource('pedidos', PedidoController::class);
 Route::resource('catalogos', CatalogoController::class);
 Route::resource('coberturas', CoberturaController::class);
+Route::resource('bancos', BancoController::class);
 
 
 Route::put('pedidos/change',[PedidoController::class,'changeState']);

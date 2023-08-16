@@ -6,7 +6,7 @@
                     <div class="card-header">
                       <div class="row">
                         <div class="col-7">
-                        <h5>Listado de catalogos</h5>
+                        <h5>Banco</h5>
                       </div>
                        <div class="col 6">
                         <button @click="showDialog" class="btn btn-success btn-sm float-end">Nuevo</button>
@@ -23,17 +23,16 @@
                       <table class="table bordered">
                         <thead>
                           <tr>
-                            <th scope="col">catalogos</th>
-                            <th scope="col">Acciones</th>
+                            <th scope="col">Banco</th>
                           </tr>
                         </thead>
                             <tbody>
-                              <tr v-for="item in catalogos" :key = "item.id" >
+                              <tr v-for="item in bancos" :key = "item.id" >
                                   <td>{{ item.nombre }}</td>
                                 <td>
-                                  <button type="button" class="btn btn-primary btn-sm" @click="showDialogEditar(item)">Editar</button>
+                                  <button class="btn btn-primary btn-sm" @click="showDialogEditar(item)">Editar</button>
                                   &nbsp;
-                                  <button type="button" class="btn btn-danger btn-sm" @click="eliminar(item)">Eliminar</button>
+                                  <button class="btn btn-danger btn-sm" @click="eliminar(item)">Eliminar</button>
                                 </td>
                               </tr>
                             </tbody>
@@ -44,11 +43,11 @@
         </div>
     </div>
     <!-- Modal -->
-  <div class="modal fade" id="catalogoModal" tabindex="-1" aria-labelledby="catalgoModalLabel" aria-hidden="true">
+  <div class="modal fade" id="bancoModal" tabindex="-1" aria-labelledby="bancoModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="catalogoModalLabel">{{ formTitle }}</h1>
+          <h1 class="modal-title fs-5" id="bancoModalLabel">{{ formTitle }}</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -56,8 +55,8 @@
           <div class="row">
             <div class="form-group col-12">
               <label for="nombre">Nombre</label>
-              <input type="text" class="form-control" v-model="catalogo.nombre">
-              <span class="text-danger" v-show="CatalogoErrors.nombre">Nombre del catalogo es requerido</span>
+              <input type="text" class="form-control" v-model="banco.nombre">
+              <span class="text-danger" v-show="bancoErrors.nombre">Nombre del banco es requerido</span>
             </div>
           </div>
         </div>
@@ -74,13 +73,13 @@
     export default{
           data(){
               return{
-                  catalogos:[],
-                  catalogo:{
+                  bancos:[],
+                  banco:{
                     id:null,
                     nombre: ""
                   },
-                  editedCatalogo: -1,
-                  CatalogoErrors:{
+                  editedBanco: -1,
+                  bancoErrors:{
                     nombre:false
                   },
                   filters:[],
@@ -88,106 +87,111 @@
               }
           },
           created: function(){
-            this.filters = this.catalogos;
+            this.filters = this.bancos;
           },
           computed:{
         formTitle(){
-            return this.catalogo.id == null ? "Agregar catalogo" : "Actualizar cataogo";
+            return this.banco.id == null ? "Agregar banco" : "Actualizar banco";
           },
           btnTitle(){
-          return this.catalogo.id == null ? "Guardar" : "Actualizar";
+          return this.banco.id == null ? "Guardar" : "Actualizar";
           },
-          items()
-      {
-        return this.catalogo.filter(item =>{
-          return item.nombre.toLowerCase().includes(this.seach.toLocaleLowerCase());
-        } )
-      }
+        items()
+          {
+            return this.bancos.filter(item =>{
+              return item.nombre.toLowerCase().includes(this.seach.toLocaleLowerCase());
+            } )
+          }
         },
           methods:{
                //para que no haga una peticion directa 
-              async fetchCatalogos(){
+              async fetchBancos(){
                   let me = this;
-                  await this.axios.get('/catalogos')
+                  await this.axios.get('/bancos')
                   .then(response =>{
-                     me.catalogos = response.data;
+                     me.bancos = response.data;
                   })
               },
               // para agregar nueva marca
               showDialog(){
-                this.catalogo = {
+                this.banco = {
                   id: null,
                   nombre: ""
                 },
-                this.CatalogoErrors = {
+                this.bancoErrors = {
                   nombre:false
                 }
-            $('#catalogoModal').modal('show');
+            $('#bancoModal').modal('show');
           },
           hideDialog()
       {
         let me = this;
         setTimeout(() =>{
-          me.marca = {
+          me.banco = {
             id:null,
             nombre:""
           };
         },300)
-        $('#catalogoModal').modal('hide');
+        $('#bancoModal').modal('hide');
       },
           //metodo para editar un sabor
-          showDialogEditar(catalogo){
+          showDialogEditar(banco){
             let me = this;
-            $('#catalogoModal').modal('show');
-            me.editedCatalogo = me.catalogos.indexOf(catalogo);
-            me.catalogo = Object.assign({}, catalogo);
+            $('#bancoModal').modal('show');
+            me.editedBanco = me.bancos.indexOf(banco);
+            me.banco = Object.assign({}, banco);
           },
           //este metodo es una meticion entonces tiene que ser async
         //metodo para guardar o actualizar
         async saveOrUpdate(){
-          let me = this;         //el de abajo es operrador ternario
-          me.CatalogoErrors.nombre = false;
-  me.catalogo.nombre = me.catalogo.nombre.trim().toLowerCase(); // Convertir a minúsculas y eliminar espacios
 
-  if (!me.catalogo.nombre) {
-    me.CatalogoErrors.nombre = true;
+          let me = this;
+  me.bancoErrors.nombre = false;
+  me.banco.nombre = me.banco.nombre.trim().toLowerCase(); // Convertir a minúsculas y eliminar espacios
+
+  if (!me.banco.nombre) {
+    me.bancoErrors.nombre = true;
     return; // Detener el proceso si el nombre está vacío o solo contiene espacios
   }
 
   // Verificar si el nombre del sabor ya existe en la lista
-  const existingCatalogo = me.catalogos.find(item => item.nombre.toLowerCase() === me.catalogo.nombre);
-  if (existingCatalogo) {
-    me.CatalogoErrors.nombre = true;
+  const existingBanco = me.bancos.find(item => item.nombre.toLowerCase() === me.banco.nombre);
+  if (existingBanco) {
+    me.bancoErrors.nombre = true;
     // Mostrar mensaje de error
     this.$swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'El sabor ya existe en la lista.',
+      text: 'El banco ya existe en la lista.',
       timer: 3000,
       timerProgressBar: true,
     });
     return; // Detener el proceso si el nombre ya existe
   }
 
-          me.catalogo.nombre == ''  ? me.CatalogoErrors.nombre = true :  me.CatalogoErrors.nombre = false
-          if(me.catalogo.nombre){     //operador ternario
+          //let me = this;         //el de abajo es operrador ternario
+          me.banco.nombre == ''  ? me.bancoErrors.nombre = true :  me.bancoErrors.nombre = false
+          if(me.banco.nombre){     //operador ternario
                         // variable accion sera de agregar (add) y si no que actualice (upd)  
-            let accion = me.catalogo.id == null ? "add" : "upd";
+            let accion = me.banco.id == null ? "add" : "upd";
             if(accion == "add"){
               //guardar una marca (post en caso de agregar )
-              await this.axios.post('/catalogos', me.catalogo)
+              await this.axios.post('/bancos', me.banco)
               .then(response =>{
-                console.log(response.data);
-                if(response.status == 201){
-                  me.verificarAccion(response.data.data,response.status,accion);
-                me.hideDialog();
-                }
+                //console.log(response.data);
+                if(response.status == 201)
+                  {
+                    me.verificarAccion(response.data.data,response.status,accion);
+                    me.hideDialog();
+                  }
+                //me.verificarAccion(response.data.data,response.status,accion);
+                //me.hideDialog();
               }).catch(errors =>{
                 console.log(errors);
               })
              }else{
               //para actualizar una marca, con comias invertidas para poder concatenar algo que es texto con un valor
-              await this.axios.put(`/catalogos/${me.catalogo.id}`, me.catalogo)
+              await this.axios.put(`/bancos/${me.banco.id}`, me.banco)
               .then(response =>{
                 //preguntamos si la peticion se completa
                 if(response.status == 202){
@@ -201,10 +205,10 @@
           }
         },
           //metodo para borrar
-          async eliminar(catalogo){
+          async eliminar(banco){
             let me = this;
             this.$swal.fire({
-              title: 'seguro/a de eliminar este registro?',
+              title: 'Seguro/a de eliminar este registro?',
               text: "No podras revertir la accion",
               icon: 'question',
               showCancelButton: true,
@@ -214,8 +218,8 @@
               cancelButtonText: 'No',
             }).then((result) =>{
               if(result.value){
-                me.editedCatalogo = me.catalogos.indexOf(catalogo);
-                this.axios.delete(`/catalogos/${catalogo.id}`)
+                me.editedBanco = me.bancos.indexOf(banco);
+                this.axios.delete(`/bancos/${banco.id}`)
                 .then(response =>{
                   me.verificarAccion(null,response.status,"del");
                 }).catch(errors =>{
@@ -225,11 +229,11 @@
             })
           },
           //metodo para que muestre un msj y actualize la tabla cuando inserte una marca nueva  
-          verificarAccion(catalogo, statusCode, accion){
+          verificarAccion(banco, statusCode, accion){
             let me = this;
             const Toast = this.$swal.mixin({
               toast:true,
-              position: 'top-end',
+              position: 'top-right',
               showConfirmButton:false,
               timer:2000,
               timerProgressBar: true
@@ -237,28 +241,28 @@
             switch (accion){
               case "add":
                 //se agrega al principio del arreglo marcas, la nueva marca
-                me.catalogos.unshift(catalogo);
+                me.bancos.unshift(banco);
                 Toast.fire({
                   icon: 'success',
-                  title: 'Catalogo Registrada con Exito'
+                  title: 'banco Registrada con Exito'
                 });
                 break;
                 case "upd":
-                  Object.assign(me.catalogos[me.editedCatalogo], catalogo);
+                  Object.assign(me.bancos[me.editedBanco], banco);
                   Toast.fire({
                     icon: 'success',
-                    'title': 'Catalogo Actualizado con Exito'
+                    'title': 'banco Actualizado con Exito'
                   });
                   break;
                   case "del":
                   if(statusCode == 200)
-            {
+                 {
               try{
-                me.catalogos.splice(me.editedCatalogo,1);
+                me.bancos.splice(me.editedBanco,1);
                 //se lanza el mensaje final
                 Toast.fire({
                   icon: 'success',
-                 'title': 'Catalogo Eliminado...!!!'
+                 'title': 'Banco Eliminado...!!!'
                 });
               }catch(error)
               {
@@ -267,17 +271,16 @@
             }else{
               Toast.fire({
                 icon: 'warning',
-               'title': 'error al eliminar el Catalogo, intente de nuevo'
+               'title': 'error al eliminar el banco, intente de nuevo'
               });
             }
                     break;
               }
           },
-  
         },
           mounted(){
-            this.fetchCatalogos();
-          }
+            this.fetchBancos();
+          },
       }
       
   </script>

@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Banco;
+
 use Illuminate\Http\Request;
-class BancoController extends Controller
+use App\Models\Promocion;
+class PromocionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,21 +14,23 @@ class BancoController extends Controller
         //
         try
         {
-            $bancos = Banco::all();
-            return $bancos;
+            $promociones = Promocion::all();
+            return $promociones;
         }
             catch(\Exception $e)
             {
                 return $e->getMessage();
             }
     }
+    
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        return view('admin.bancos');
+        //
+        return view('admin.promociones');
     }
 
     /**
@@ -37,11 +40,17 @@ class BancoController extends Controller
     {
         //
         try{
-            $banco = new Banco();
-            $banco->nombre = $request->nombre;
-           if ($banco->save() >= 1)
+            $promocion = new Promocion();
+            $promocion->nombre = $request->nombre;
+            $promocion->descripcion = $request->descripcion;
+            $promocion->tipo = $request->tipo;
+            $promocion->descuento = $request->descuento;
+            $promocion->fecha_inicio = $request->fecha_inicio;
+            $promocion->fecha_final = $request->fecha_final;
+            $promocion->precio_promocion = $request->precio_promocion;
+           if ($promocion->save() >= 1)
            {
-            return response()->json(['status'=>'ok','data'=>$banco],201);
+            return response()->json(['status'=>'ok','data'=>$promocion],201);
            }else{
             return response()->json(['status'=>'fail','data'=>null],409);
            }
@@ -58,8 +67,8 @@ class BancoController extends Controller
     {
         //
         try{
-            $banco = Banco::findOrFail($id);
-            return $banco;
+            $promocion = Promocion::findOrFail($id);
+            return $promocion;
         }
         catch(\Exception $e)
         {
@@ -82,11 +91,17 @@ class BancoController extends Controller
     {
         //
         try{
-            $banco = Banco::findOrFail($id);
-            $banco->nombre = $request->nombre;
-           if ($banco->update() >= 1)
+            $promocion = Promocion::findOrFail($id);
+            $promocion->nombre = $request->nombre;
+            $promocion->descripcion = $request->descripcion;
+            $promocion->tipo = $request->tipo;
+            $promocion->descuento = $request->descuento;
+            $promocion->fecha_inicio = $request->fecha_inicio;
+            $promocion->fecha_final = $request->fecha_final;
+            $promocion->precio_promocion = $request->precio_promocion;
+           if ($promocion->update() >= 1)
            {
-            return response()->json(['status'=>'ok','data'=>$banco],202);
+            return response()->json(['status'=>'ok','data'=>$promocion],202);
            }
          } catch(\Exception $e)
                  {
@@ -101,10 +116,10 @@ class BancoController extends Controller
     {
         //
         try{
-            $banco = Banco::findOrFail($id);
-           if ($banco->delete() >= 1)
+            $promocion = Promocion::findOrFail($id);
+           if ($promocion->delete() >= 1)
            {
-            return response()->json(['status'=>'ok','data'=>$banco],200);
+            return response()->json(['status'=>'ok','data'=>$promocion],200);
            }
          } catch(\Exception $e)
                  {

@@ -9,7 +9,7 @@ class ProductoSabor extends Model
 {
     use HasFactory;
 
-    protected $table = "productos_sabores";
+    protected $table = "producto_sabores";
 
         //relaciones inversas
     public function sabor()

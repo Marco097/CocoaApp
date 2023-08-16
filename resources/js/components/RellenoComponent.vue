@@ -148,6 +148,30 @@
         //metodo para guardar o actualizar
         async saveOrUpdate(){
           let me = this;         //el de abajo es operrador ternario
+                me.rellenoErrors.nombre = false;
+        me.relleno.nombre = me.relleno.nombre.trim().toLowerCase(); // Convertir a minúsculas y eliminar espacios
+
+        if (!me.relleno.nombre) {
+          me.rellenoErrors.nombre = true;
+          return; // Detener el proceso si el nombre está vacío o solo contiene espacios
+        }
+
+        // Verificar si el nombre del sabor ya existe en la lista
+        const existingRelleno = me.rellenos.find(item => item.nombre.toLowerCase() === me.relleno.nombre);
+        if (existingRelleno) {
+          me.rellenoErrors.nombre = true;
+          // Mostrar mensaje de error
+          this.$swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'El Relleno ya existe en la lista.',
+            timer: 3000,
+            timerProgressBar: true,
+          });
+          return; // Detener el proceso si el nombre ya existe
+        }
+
+
           me.relleno.nombre == ''  ? me.rellenoErrors.nombre = true :  me.rellenoErrors.nombre = false
           if(me.relleno.nombre){     //operador ternario
                         // variable accion sera de agregar (add) y si no que actualice (upd)  

@@ -9,7 +9,7 @@ class ProductoPromocion extends Model
 {
     use HasFactory;
 
-    protected $table = "productos_promociones";
+    protected $table = "producto_promociones";
 
          //relaciones inversas
          public function producto()
@@ -20,6 +20,6 @@ class ProductoPromocion extends Model
           //relaciones inversas
              public function promocion()
                 {
-                    return $this->belongsTo(Producto::class);
+                    return $this->belongsTo(Promocion::class);
                 }
 }
