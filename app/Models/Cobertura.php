@@ -9,7 +9,7 @@ class Cobertura extends Model
 {
     use HasFactory;
 
-    public function productos_coberturas()
+    public function producto_coberturas()
     {
         return $this->hasMany(ProductoCobertura::class);
     }

@@ -13,7 +13,7 @@ class Sabor extends Model
 
         //relacion de 1:N con sabores
 
-        public function productos_sobores()
+        public function producto_sobores()
         {
             return $this->hasMany(ProductoSabor::class);
         }

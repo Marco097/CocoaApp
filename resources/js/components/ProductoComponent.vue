@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-10">
+            <div class="col-md-16">
                 <div class="card">
                     <div class="card-header">
                         <div class="row">
@@ -28,6 +28,8 @@
                                     <th scope="col">Existencias</th> 
                                     <th scope="col">Catalogo</th>
                                     <th scope="col">Imagen</th>
+                                    <th scope="col">Fecha en Venta</th>
+                                    <th scope="col">Fecha de Vencimiento</th>
                                     <th scope="col">Acciones</th>
                                     
                                 </tr>
@@ -35,11 +37,14 @@
                             <tbody>
                                 <tr v-for="item in productos" :key="item.id">
                                     <td>{{ item.nombre }}</td>
-                                    <td>{{ item.relleno.nombre }}</td>
-                                    <td>{{ item.descripcion}}</td>
+                                    <td>{{ item.descripcion}}</td>                               
+                                    <td> {{ item.hecho }} </td>
+                                    <td> {{ item.vencimiento }} </td>
                                     <td>{{ item.precio }}</td>
-                                    <td>{{ item.existencia }}</td>
+                                    <td>{{ item.existencias }}</td>
+                                    <td>{{ item.relleno.nombre }}</td>
                                     <td>{{ item.catalogo.nombre }}</td>
+                                   
                                    <td><img :src="`/images/productos/${item.imagen}`" :alt="`${item.imagen}`" style="width:150px;height: 100px"></td>
                                     <td>
                                         <button type="button" class="btn btn-primary btn-sm"
@@ -74,8 +79,14 @@
                             <span class="text-danger" v-show="productoErrors.nombre">nombre requerido</span>
                         </div>
                     </div>
-                    
-                    <!--<div class="row">
+                    <div class="row">
+                        <div class="form-group col-12">
+                            <label for="descripcion">Descripcion</label>
+                            <input type="text" class="form-control" v-model="producto.descripcion">
+                           
+                        </div>
+                    </div>                   
+                    <div class="row">
                         <div class="form-group col-6">
                             <label for="sabor">Sabor</label>
                             <select v-model="producto.sabor_id" class="form-control">
@@ -84,7 +95,17 @@
                                 </option>
                             </select>
                             <span class="text-danger" v-show="productoErrors.sabor">Seleccione un sabor</span>
+                        </div>
+                        <!--<div class="form-group col-6">
+                            <label for="sabor">Sabor</label>
+                            <select v-model="producto.sabor_id" class="form-control">
+                                <option v-for="sab in sabores" :value="sab.id" >
+                                {{ sab.nombre }}
+                                </option>
+                            </select>
+                            <span class="text-danger" v-show="productoErrors.sabor">Seleccione un sabor</span>
                         </div> -->
+
                         
                         <div class="form-group col-6">
                             <label for="relleno">Relleno</label>
@@ -94,14 +115,17 @@
                                 </option>
                             </select>
                         </div>
+
+                        <!--<div class="form-group col-6">
+                            <label for="relleno">Cobertura</label>
+                            <select v-model="producto.cobertura_id" class="form-control">
+                                <option v-for="cob in coberturas" :value="cob.id" >
+                                {{ relle.nombre }}
+                                </option>
+                            </select>
+                        </div>-->
                     </div>
-                    <div class="row">
-                        <div class="form-group col-12">
-                            <label for="descripcion">Descripcion</label>
-                            <input type="text" class="form-control" v-model="producto.descripcion">
-                            <span class="text-danger" v-show="productoErrors.descripcion">Descripcion es requerido</span>
-                        </div>
-                    </div>
+                    
 
                     <div class="row">
 
@@ -129,9 +153,15 @@
                         </div>
 
                         <div class="row">
-                        <div class="form-group col-12">
-                            <label for="nombre">hecho</label>
-                            <input type="text" class="form-control" v-model="producto.hecho">
+                        <div class="form-group col-6">
+                            <label for="hecho">Fecha a la venta</label>
+                            <input type="date" class="form-control" v-model="producto.hecho">
+                            <span class="text-danger" v-show="productoErrors.hecho">la fecha es requerida</span>
+                        </div>
+
+                        <div class="form-group col-6">
+                            <label for="hecho">Fecha de Vencimiento</label>
+                            <input type="date" class="form-control" v-model="producto.vencimiento">
                             <span class="text-danger" v-show="productoErrors.hecho">la fecha es requerida</span>
                         </div>
                     </div>
@@ -157,7 +187,7 @@
             </div>
 
         </div>
-  <!--</div>-->
+  </div>
   </template>
   
   <script>
@@ -168,13 +198,14 @@
             producto: {
                 id: null,
                 nombre: "",
-                //sabor_id:null,
+                descripcion:null,              
+                sabor_id:null,
                 relleno_id:null,
-                precio: 25,
+                precio: 0,
                 existencias:"",
                 catalogo_id:null,
                 imagen: null,
-                //sabor: null,
+                sabor: null,
                 relleno: null,
                 catalogo:null
 
@@ -184,14 +215,14 @@
             editedProducto: -1,
             productoErrors: {
                 nombre: false,
-                //sabor: false,
+                sabor: false,
                 relleno: false,
                 precio: false,
                 catalogo: false
             },
             filters:[],
             search:'',
-            //sabores:[],
+            sabores:[],
             rellenos:[],
             catalogos:[]
         }
@@ -215,14 +246,14 @@
                     me.productos = response.data;
                 })
         },
-        /*async fetchSabores() {
+        async fetchSabores() {
             let me = this;
             await this.axios.get('/sabores')
                 .then(response => {
                     me.sabores = response.data;
                 })
         },
-        */
+        
         async fetchRellenos() {
             let me = this;
             await this.axios.get('/rellenos')
@@ -245,10 +276,10 @@
                 precio: 0,
                 existencias: 0,
                 imagen: "",
-                //sabor: null,
+                sabor: null,
                 relleno: null,
                 catalogo:null,
-                //sabor_id:null,
+                sabor_id:null,
                 relleno_id:null,
                 catalogo_id:null,
             };
@@ -260,7 +291,7 @@
                 precio: false,
                 existencias: false,
                 imagen: false,
-               // sabor: false,
+                sabor: false,
                 relleno: false,
                 catalogo: false,
             };
@@ -285,7 +316,7 @@
                 precio: 0,
                 existencias: 0,
                 imagen: "",
-                //sabor: null,
+                sabor: null,
                 relleno: null,
                 catalogo:null,
                 },
@@ -298,7 +329,7 @@
         async saveOrUpdate() {
             let me = this;
             me.producto.nombre == '' ? me.productoErrors.nombre = true : me.productoErrors.nombre = false;
-           // me.producto.sabor_id == null ? me.productoErrors.sabor = true : me.productoErrors.sabor = false;
+            me.producto.sabor_id == null ? me.productoErrors.sabor = true : me.productoErrors.sabor = false;
             me.producto.relleno_id == null ? me.productoErrors.relleno = true : me.productoErrors.relleno = false;
             me.producto.catalogo_id == null ? me.productoErrors.catalogo = true : me.productoErrors.catalogo = false;
             me.producto.descripcion == '' ? me.productoErrors.descripcion = true : me.productoErrors.descripcion = false;
@@ -309,7 +340,7 @@
                 
                 let accion = me.producto.id == null ? "add" : "upd";
                 
-                /* me.producto.sabor ={
+                 me.producto.sabor ={
                     "id" : me.producto.sabor_id
                 };
                 me.producto.relleno ={
@@ -317,10 +348,10 @@
                 };
                 me.producto.catalogo ={
                     "id" : me.producto.catalogo_id
-                };*/
+                };
                 let formData = new FormData();
                 formData.append("nombre", me.producto.nombre);
-                //formData.append("sabor_id", me.producto.sabor_id);
+                formData.append("sabor_id", me.producto.sabor_id);
                 formData.append("relleno_id", me.producto.relleno_id);
                 formData.append("catalogo_id", me.producto.catalogo_id);
                 formData.append("descripcion", me.producto.descripcion);
@@ -406,7 +437,7 @@
             });
             switch (accion) {
                 case "add":
-                    //agregamos al principio del arreglo auto, la nueva auto
+                    //agregamos al principio del arreglo producto, la nueva producto
                     //me.auto.unshift(auto);
                     me.fetchProductos();
                     Toast.fire({
@@ -455,7 +486,7 @@
     mounted() {
         // this.$swal('Welcome to RentasCars!!!');
         this.fetchProductos();
-        //this.fetchSabores();
+        this.fetchSabores();
         this.fetchRellenos();
         this.fetchCatalogos();
     }

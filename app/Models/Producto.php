@@ -19,7 +19,7 @@ class Producto extends Model
                 return $this->belongsTo(Relleno::class);
             }
            //relacion de 1:N con producto sabor
-           public function productos_sabores()
+           public function producto_sabores()
            {
                return $this->hasMany(ProductoSabor::class);
            }
@@ -32,13 +32,13 @@ class Producto extends Model
            }
 
               //relacion de 1:N con producto promocion
-            public function productos_promociones()
+            public function producto_promociones()
                 {
                     return $this->hasMany(ProductoPromocion::class);
                 }
 
               //relacion de 1:N con producto sabor
-           public function productos_coberturas()
+           public function producto_coberturas()
            {
                return $this->hasMany(ProductoCobertura::class);
            }

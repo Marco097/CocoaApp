@@ -282,6 +282,5 @@
           mounted(){
             this.fetchSabores();
           },
-      }
-      
+      }     
   </script>

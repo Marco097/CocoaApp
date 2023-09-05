@@ -12,7 +12,7 @@ class Promocion extends Model
     protected $table = "promociones";
 
                 //relacion de 1:N con productos
-                public function productos_promociones()
+                public function producto_promociones()
                 {
                     return $this->hasMany(Producto::class);
                 }
