@@ -7,6 +7,8 @@ use App\Models\ProductoPromocion;
 use App\Models\ProductoSabor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+//use App\Http\Controllers\CoberturaController;
+use App\Models\Cobertura;
 
 class ProductoController extends Controller
 {
@@ -26,10 +28,10 @@ class ProductoController extends Controller
                 if ($producto->relleno) {
                     $response[$i]["relleno"] = $producto->relleno->toArray();
                 } 
-                $response[$i]["sabores"] = $producto->producto_sabores->toArray(); 
-                $response[$i]["catalogo"] = $producto->catalogo->toArray(); 
-                $response[$i]["promociones"] = $producto->producto_promociones->toArray();  
-                $response[$i]["cobertura"] = $producto->producto_coberturas->toArray(); 
+                $response[$i]["sabores"] = $producto->producto_sabores->toArray();
+                $response[$i]["catalogo"] = $producto->catalogo->toArray();
+                $response[$i]["promociones"] = $producto->producto_promociones->toArray();
+                $response[$i]["cobertura"] = $producto->producto_coberturas->toArray();
                           
                 $i++;
             }
@@ -160,16 +162,34 @@ class ProductoController extends Controller
         try{
             $producto = Producto::findOrFail($id);
             //convirtienod en array
-            $response = $producto->toArray();   
+            $response = $producto->toArray();
             $response["relleno"]= $producto->relleno->toArray();
             $response["catalogo"]= $producto->catalogo->toArray();
             $response["sabor"] = $producto->sabor->toArray();
             $response["promocion"] = $producto->promocion->toArray();  
             $response["cobertura"] = $producto->cobertura->toArray(); 
-            return $response;
-        }catch(\Exception $e){
-            return $e->getMessage();
+          // Calcula el costo total, incluyendo las coberturas adicionales
+        $costoTotal = $producto->precio;
+
+        // Recorre las coberturas seleccionadas por el cliente y suma sus costos
+        $coberturasSeleccionadas = $response->input('coberturasSeleccionadas'); // Asegúrate de que este campo coincida con el nombre en tu solicitud
+        if (!empty($coberturasSeleccionadas) && is_array($coberturasSeleccionadas)) {
+            foreach ($coberturasSeleccionadas as $coberturaId) {
+                // Obtén la información de la cobertura desde tu base de datos
+                $cobertura = Cobertura::findOrFail($coberturaId); // Asegúrate de que el modelo de Cobertura esté importado
+
+                // Suma el costo de la cobertura al costo total
+                $costoTotal += $cobertura->precio;
+            }
         }
+
+        // Agrega el costo total al array de respuesta
+        $response["costo_total"] = $costoTotal;
+
+        return response()->json(['status' => 'ok', 'data' => $response], 200);
+    } catch (\Exception $e) {
+        return $e->getMessage();
+    }
     }
 
     /**
@@ -217,7 +237,7 @@ class ProductoController extends Controller
             //GENERANDO UN NOMBRE UNICO PARA LA IMAGEN 
             $nombreImagen = time() . '_' . $imagen->getClientOriginalName();
             //subiendo la imagen a una carpeta del servidor
-            $imagen->move(public_path('images/productos/'),$nombreImagen);
+            $imagen->move(public_path('/images/productos/'),$nombreImagen);
             $producto->imagen = $nombreImagen;
         }else{
            
@@ -229,7 +249,7 @@ class ProductoController extends Controller
          //if (!is_null($sabore) && is_array($sabore)) 
          //{
              foreach ($sabore as $key => $sb) {
-                 $productoSabor = new ProductoSabor();
+                 $productoSabor = ProductoSabor::findOrFail($sabore['id']);
                  $productoSabor->sabor_id = $sb['id'];
                  $productoSabor->producto_id = $producto->id;
  
@@ -243,7 +263,7 @@ class ProductoController extends Controller
         //if (!is_null($promocio) && is_array($promocio)) 
          //{
              foreach ($promocio as $key => $promo) {
-                 $productoPromocion = new ProductoPromocion();
+                 $productoPromocion = ProductoPromocion::findOrFail($promocio['id']);
                  $productoPromocion->promocion_id = $promo['id'];
                  $productoPromocion->producto_id = $producto->id;
  
@@ -258,7 +278,7 @@ class ProductoController extends Controller
          //if (!is_null($cobertu) && is_array($cobertu))
          //{
              foreach ($cobertu as $key => $cob) {
-                 $productoCobertura = new ProductoCobertura();
+                 $productoCobertura = ProductoCobertura::findOrFail($cobertu['id']);
                  $productoCobertura->cobertura_id = $cob['id'];
                  $productoCobertura->producto_id = $producto->id;
  
@@ -304,5 +324,6 @@ class ProductoController extends Controller
                 {
                     return $e->getMessage();
                 }
+                
     }
 }

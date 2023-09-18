@@ -48,6 +48,7 @@ class PromocionController extends Controller
             $promocion->fecha_inicio = $request->fecha_inicio;
             $promocion->fecha_final = $request->fecha_final;
             $promocion->precio_promocion = $request->precio_promocion;
+            $promocion->estado = $request->estado;
            if ($promocion->save() >= 1)
            {
             return response()->json(['status'=>'ok','data'=>$promocion],201);
@@ -92,6 +93,22 @@ class PromocionController extends Controller
         //
         try{
             $promocion = Promocion::findOrFail($id);
+            if($request->estado == 'A')
+            {
+                $promocion->nombre = $request->nombre;
+            $promocion->descripcion = $request->descripcion;
+            $promocion->tipo = $request->tipo;
+            $promocion->descuento = $request->descuento;
+            $promocion->fecha_inicio = $request->fecha_inicio;
+            $promocion->fecha_final = $request->fecha_final;
+            $promocion->precio_promocion = $request->precio_promocion;
+           if ($promocion->update() >= 1)
+           {
+            return response()->json(['status'=>'ok','data'=>$promocion],202);
+           }
+         
+    }elseif($request->estado == 'I')
+    {
             $promocion->nombre = $request->nombre;
             $promocion->descripcion = $request->descripcion;
             $promocion->tipo = $request->tipo;
@@ -103,11 +120,13 @@ class PromocionController extends Controller
            {
             return response()->json(['status'=>'ok','data'=>$promocion],202);
            }
-         } catch(\Exception $e)
-                 {
-                    return $e->getMessage();
-                 }
     }
+} catch(\Exception $e)
+    {
+       return $e->getMessage();
+    }
+}
+
 
     /**
      * Remove the specified resource from storage.
@@ -125,5 +144,20 @@ class PromocionController extends Controller
                  {
                     return $e->getMessage();
                  }
+    }
+
+    public function showByState(Request $request)
+    {
+        try{
+            $promociones = Promocion::where('estado', '=', $request->estado)->get();
+    
+            $response = $promociones->toArray();
+            //$i = 0;
+
+           return $response;
+        }catch(\Exception $e)
+        {
+            return $e->getMessage();
+        }
     }
 }

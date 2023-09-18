@@ -9,6 +9,8 @@ use App\Http\Controllers\CatalogoController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\PromocionController;
 use App\Http\Controllers\CoberturaController;
+use App\Models\Pedido;
+use App\Models\Promocion;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,4 +34,5 @@ Route::resource('promociones', PromocionController::class);
 Route::resource('coberturas', CoberturaController::class);
 Route::resource('bancos', BancoController::class);
 //Route::get('/productos-get', [ProductoController::class, 'index']);
+Route::get('promociones/state', [PromocionController::class, 'showByState']);
 

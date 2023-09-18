@@ -22,30 +22,28 @@
                             <thead>
                                 <tr>
                                     <th scope="col">Nombre</th>
-                                    <th scope="col">Relleno</th>
                                     <th scope="col">Descripcion</th>
+                                    <th scope="col">Relleno</th>
+                                    <th scope="col">Catalogo</th> 
                                     <th scope="col">Precio</th>
-                                    <th scope="col">Existencias</th> 
-                                    <th scope="col">Catalogo</th>
-                                    <th scope="col">Imagen</th>
+                                    <th scope="col">Existencias</th>                              
                                     <th scope="col">Fecha en Venta</th>
-                                    <th scope="col">Fecha de Vencimiento</th>
+                                    <th scope="col">Fecha de Vencimiento</th>                    
+                                    <th scope="col">Imagen</th>
                                     <th scope="col">Acciones</th>
-                                    
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="item in productos" :key="item.id">
                                     <td>{{ item.nombre }}</td>
-                                    <td>{{ item.descripcion}}</td>                               
-                                    <td> {{ item.hecho }} </td>
-                                    <td> {{ item.vencimiento }} </td>
+                                    <td>{{ item.descripcion}}</td>  
+                                    <td>{{ item.relleno ? item.relleno.nombre : 'Sin relleno'}}</td>
+                                    <td>{{ item.catalogo.nombre }}</td>  
                                     <td>{{ item.precio }}</td>
                                     <td>{{ item.existencias }}</td>
-                                    <td>{{ item.relleno.nombre }}</td>
-                                    <td>{{ item.catalogo.nombre }}</td>
-                                   
-                                   <td><img :src="`/images/productos/${item.imagen}`" :alt="`${item.imagen}`" style="width:150px;height: 100px"></td>
+                                    <td> {{ item.hecho }} </td>
+                                    <td> {{ item.vencimiento }} </td>
+                                   <td><img :src="`/images/productos/${item.imagen}`" :alt="`${item.imagen}`" style="width:100px;height: 100px"></td>
                                     <td>
                                         <button type="button" class="btn btn-primary btn-sm"
                                             @click="showDialogEditar(item)">Editar</button>
@@ -96,15 +94,7 @@
                             </select>
                             <span class="text-danger" v-show="productoErrors.sabor">Seleccione un sabor</span>
                         </div>
-                        <!--<div class="form-group col-6">
-                            <label for="sabor">Sabor</label>
-                            <select v-model="producto.sabor_id" class="form-control">
-                                <option v-for="sab in sabores" :value="sab.id" >
-                                {{ sab.nombre }}
-                                </option>
-                            </select>
-                            <span class="text-danger" v-show="productoErrors.sabor">Seleccione un sabor</span>
-                        </div> -->
+
 
                         
                         <div class="form-group col-6">
@@ -115,15 +105,6 @@
                                 </option>
                             </select>
                         </div>
-
-                        <!--<div class="form-group col-6">
-                            <label for="relleno">Cobertura</label>
-                            <select v-model="producto.cobertura_id" class="form-control">
-                                <option v-for="cob in coberturas" :value="cob.id" >
-                                {{ relle.nombre }}
-                                </option>
-                            </select>
-                        </div>-->
                     </div>
                     
 
@@ -216,7 +197,7 @@
             productoErrors: {
                 nombre: false,
                 sabor: false,
-                relleno: false,
+                //relleno: false,
                 precio: false,
                 catalogo: false
             },
@@ -292,7 +273,7 @@
                 existencias: false,
                 imagen: false,
                 sabor: false,
-                relleno: false,
+               // relleno: false,
                 catalogo: false,
             };
             $('#productoModal').modal('show');
@@ -302,7 +283,7 @@
             $('#productoModal').modal('show');
             me.editedProducto = me.productos.indexOf(producto);
             me.producto = Object.assign({}, producto);
-            me.imagePreview ="/images/productos"+ me.producto.imagen;
+            me.imagePreview ="/images/productos/"+ me.producto.imagen;
         },
         
         
@@ -334,30 +315,35 @@
             me.producto.catalogo_id == null ? me.productoErrors.catalogo = true : me.productoErrors.catalogo = false;
             me.producto.descripcion == '' ? me.productoErrors.descripcion = true : me.productoErrors.descripcion = false;
             me.producto.precio == null ? me.productoErrors.precio = true : me.productoErrors.precio = false;
-            me.producto.existencias == '' ? me.productoErrors.existencias= true : me.productoErrors.existencia = false;
+            me.producto.existencias == '' ? me.productoErrors.existencias= true : me.productoErrors.existencias = false;
 
             if (me.producto.nombre) {
                 
                 let accion = me.producto.id == null ? "add" : "upd";
                 
-                 me.producto.sabor ={
+                 me.producto.sabor = {
                     "id" : me.producto.sabor_id
                 };
-                me.producto.relleno ={
+                me.producto.relleno = {
                     "id" : me.producto.relleno_id
                 };
-                me.producto.catalogo ={
+                me.producto.catalogo = {
                     "id" : me.producto.catalogo_id
                 };
                 let formData = new FormData();
                 formData.append("nombre", me.producto.nombre);
-                formData.append("sabor_id", me.producto.sabor_id);
-                formData.append("relleno_id", me.producto.relleno_id);
-                formData.append("catalogo_id", me.producto.catalogo_id);
                 formData.append("descripcion", me.producto.descripcion);
                 formData.append("precio", me.producto.precio);
                 formData.append("existencias", me.producto.existencias);
-  
+                formData.append("sabor_id", me.producto.sabor_id);
+                
+                formData.append("catalogo_id", me.producto.catalogo_id);
+
+               // if (me.productoErrors.relleno != null)
+                //{
+                    formData.append("relleno_id", me.producto.relleno_id);
+               // }
+            
                 if(me.imageCar != null)
                 {
                   formData.append("imagen", me.imageCar);
@@ -371,7 +357,7 @@
   
                 if (accion == "add") {
                     //peticion para guardar una auto
-                    me.producto.imagen = "none.jpg";
+                    //me.producto.imagen = "none.jpg";
                     formData.append("estado",me.producto.estado);
                     await this.axios.post('/productos', formData, headers)
                         .then(response => {
@@ -386,7 +372,7 @@
                 } else {
                     //peticion para actualizar una marca
                    
-                   formData.append("estado",me.producto.estado)
+                   //formData.append("estado",me.producto.estado)
                    formData.append("id",me.producto.id)
                    //peticion par actualizar un auto
                    await this.axios.post(`/productos/${me.producto.id}`, formData, headers)
@@ -446,7 +432,7 @@
                     });
                     break;
                 case "upd":
-                     Object.assign(me.productos[me.editedProducto], producto); 
+                    // Object.assign(me.productos[me.editedProducto], producto); 
                     Toast.fire({
                         icon: 'success',
                         'title': 'Producto actualizada con exito...!'
@@ -489,6 +475,7 @@
         this.fetchSabores();
         this.fetchRellenos();
         this.fetchCatalogos();
+       // this.fetchCoberturas()
     }
   }
   </script>

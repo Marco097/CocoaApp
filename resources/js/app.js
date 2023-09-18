@@ -27,10 +27,11 @@ import ExampleComponent from './components/ExampleComponent.vue';
 import SaborComponent from './components/SaborComponent.vue';
 import RellenoComponent from './components/RellenoComponent.vue';
 import ProductoComponent from './components/ProductoComponent.vue';
-//import FormComponent from './components/pedidos/FormComponent.vue';
+import FormComponent from './components/pedidos/FormComponent.vue';
 import CatalogoComponent from './components/CatalogoComponent.vue';
 import CoberturaComponent from './components/CoberturaComponen.vue';
 import BancoComponent from './components/BancoComponent.vue';
+import CartComponent from './components/pedidos/CartComponent.vue';
 //import PedidosList from './components/pedidos/PedidosList.vue';
 //import Paginacion from './components/pagination/Paginacion.vue' 
 
@@ -39,9 +40,10 @@ app.component('sabor-component', SaborComponent);
 app.component('banco-component', BancoComponent);
 app.component('relleno-component', RellenoComponent);
 app.component('producto-component', ProductoComponent);
-//app.component('form-component', FormComponent);
+app.component('form-component', FormComponent);
 app.component('catalogo-component', CatalogoComponent);
 app.component('cobertura-component', CoberturaComponent);
+app.component('cart-component', CartComponent);
 //app.component('pedidos-list', PedidosList);
 
 //app.component()
