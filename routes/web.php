@@ -40,7 +40,12 @@ Route::resource('bancos', BancoController::class)->middleware('auth.admin');
 //Route::put('pedidos/change',[PedidoController::class,'changeState']);
 //Route::resource('rellenos', RellenoController::class);
 Route::get('/productos-reservas', [ProductoController::class, 'index']);
+<<<<<<< HEAD
 Route::get('/productos-cart', [ProductoController::class, 'index']);
+=======
+
+
+>>>>>>> f0aa187b5f234c60d091b5f31174033650fb9431
 //Route::get('/', [CartController::class, 'shop'])->name('shop');
 //Route::get('/cart', [CartController::class, 'cart'])->name('cart.index');
 //Route::post('/add', [CartController::class, 'add'])->name('cart.store');
