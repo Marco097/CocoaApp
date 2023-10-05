@@ -7,7 +7,7 @@
             <img :src="`/images/productos/${item.imagen}`" class="card-img-top">
             <div class="card-body">
               <h5 class="card-title text-bold">{{ item.nombre }}&nbsp;{{ item.relleno.nombre }}</h5>
-<<<<<<< HEAD
+
               <p class="card-text">Precio <b class="text-warning">${{ item.precio }}</b></p>
               <div class="input-group mb-3">
                 <input type="number" v-model="item.cantidad" min="1" class="form-control col-3" placeholder="Cantidad">
