@@ -5,7 +5,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="row">
-                            <div class="col-5">
+                            <div class="col-3">
                                 <h5 class="float-start">Listado de Productos</h5>
                             </div>
                             <div class="col-3">
@@ -23,6 +23,7 @@
                                 <tr>
                                     <th scope="col">Nombre</th>
                                     <th scope="col">Descripcion</th>
+                                    <th scope="col">Sabor</th>
                                     <th scope="col">Relleno</th>
                                     <th scope="col">Catalogo</th> 
                                     <th scope="col">Precio</th>
@@ -37,11 +38,14 @@
                                 <tr v-for="item in productos" :key="item.id">
                                     <td>{{ item.nombre }}</td>
                                     <td>{{ item.descripcion}}</td>  
-                                    <td>{{ item.relleno ? item.relleno.nombre : 'Sin relleno'}}</td>
-                                    <td>{{ item.catalogo.nombre }}</td>  
+                                    <td>
+                                        <span v-for="sabor in item.sabores">{{ sabor.nombre }}</span>
+                                    </td>
+                                    <td>{{ item.relleno ? item.relleno.nombre : '-'}}</td>
+                                    <td>{{ item.catalogo.nombre }}</td>
                                     <td>{{ item.precio }}</td>
                                     <td>{{ item.existencias }}</td>
-                                    <td> {{ item.hecho }} </td>
+                                    <td> {{ item.hecho }}</td>
                                     <td> {{ item.vencimiento }} </td>
                                    <td><img :src="`/images/productos/${item.imagen}`" :alt="`${item.imagen}`" style="width:100px;height: 100px"></td>
                                     <td>
@@ -88,9 +92,7 @@
                         <div class="form-group col-6">
                             <label for="sabor">Sabor</label>
                             <select v-model="producto.sabor_id" class="form-control">
-                                <option v-for="sab in sabores" :value="sab.id" >
-                                {{ sab.nombre }}
-                                </option>
+                                <option v-for="sab in sabores" :value="sab.id">{{ sab.nombre }}</option>
                             </select>
                             <span class="text-danger" v-show="productoErrors.sabor">Seleccione un sabor</span>
                         </div>
@@ -109,13 +111,11 @@
                     
 
                     <div class="row">
-
                         <div class="form-group col-6">
                             <label for="precio">Precio</label>
                             <input type="text" class="form-control" v-model="producto.precio">
                             <span class="text-danger" v-show="productoErrors.precio">precio es requerido</span>
                         </div>
-
                         <div class="form-group col-6">
                             <label for="existencias">Existencias</label>
                             <input type="number" class="form-control" v-model="producto.existencias">
@@ -132,21 +132,18 @@
                             </select>
                             <span class="text-danger" v-show="productoErrors.sabor">Seleccione un Catalogo</span>
                         </div>
-
                         <div class="row">
                         <div class="form-group col-6">
                             <label for="hecho">Fecha a la venta</label>
                             <input type="date" class="form-control" v-model="producto.hecho">
                             <span class="text-danger" v-show="productoErrors.hecho">la fecha es requerida</span>
                         </div>
-
                         <div class="form-group col-6">
                             <label for="hecho">Fecha de Vencimiento</label>
                             <input type="date" class="form-control" v-model="producto.vencimiento">
                             <span class="text-danger" v-show="productoErrors.hecho">la fecha es requerida</span>
                         </div>
                     </div>
-
                     </div>
                     <div class="row">
                       <div class="col-6">
@@ -163,10 +160,8 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     <button type="button" class="btn btn-primary" @click="saveOrUpdate"> {{ btnTitle }}</button>
                 </div>
-                </div>
-                
+                </div>                
             </div>
-
         </div>
   </div>
   </template>
@@ -180,13 +175,15 @@
                 id: null,
                 nombre: "",
                 descripcion:null,              
-                sabor_id:null,
+                sabor_id: null,
                 relleno_id:null,
                 precio: 0,
                 existencias:"",
                 catalogo_id:null,
                 imagen: null,
-                sabor: null,
+                sabor: {
+                    nombre: null,
+                },
                 relleno: null,
                 catalogo:null
 
@@ -199,13 +196,13 @@
                 sabor: false,
                 //relleno: false,
                 precio: false,
-                catalogo: false
+                catalogo: false,
             },
             filters:[],
             search:'',
             sabores:[],
             rellenos:[],
-            catalogos:[]
+            catalogos:[],
         }
     },
     created: function(){
@@ -225,15 +222,18 @@
             await this.axios.get('/productos')
                 .then(response => {
                     me.productos = response.data;
+                    console.log('Productos:', me.productos);
                 })
+               // me.fetchSabores();
         },
-        async fetchSabores() {
-            let me = this;
-            await this.axios.get('/sabores')
-                .then(response => {
-                    me.sabores = response.data;
-                })
-        },
+        async fetchSabores(){
+                  let me = this;
+                  await this.axios.get('/sabores')
+                  .then(response =>{
+                     me.sabores = response.data;
+                     console.log('Sabores:', me.sabores);
+                  })
+              },
         
         async fetchRellenos() {
             let me = this;
@@ -284,6 +284,10 @@
             me.editedProducto = me.productos.indexOf(producto);
             me.producto = Object.assign({}, producto);
             me.imagePreview ="/images/productos/"+ me.producto.imagen;
+
+             // Cargar el sabor y el relleno usando su ID
+            me.producto.sabor_id = producto.sabor ? producto.sabor.id : null;
+            me.producto.relleno_id = producto.relleno ? producto.relleno.id : null;
         },
         
         
@@ -311,9 +315,9 @@
             let me = this;
             me.producto.nombre == '' ? me.productoErrors.nombre = true : me.productoErrors.nombre = false;
             me.producto.sabor_id == null ? me.productoErrors.sabor = true : me.productoErrors.sabor = false;
-            me.producto.relleno_id == null ? me.productoErrors.relleno = true : me.productoErrors.relleno = false;
+            me.producto.relleno_id == null ? me.productoErrors.relleno = false : me.productoErrors.relleno = false;
+            me.producto.descripcion == '' ? me.productoErrors.descripcion = false : me.productoErrors.descripcion = false;
             me.producto.catalogo_id == null ? me.productoErrors.catalogo = true : me.productoErrors.catalogo = false;
-            me.producto.descripcion == '' ? me.productoErrors.descripcion = true : me.productoErrors.descripcion = false;
             me.producto.precio == null ? me.productoErrors.precio = true : me.productoErrors.precio = false;
             me.producto.existencias == '' ? me.productoErrors.existencias= true : me.productoErrors.existencias = false;
 

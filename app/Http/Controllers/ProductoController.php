@@ -18,33 +18,27 @@ class ProductoController extends Controller
     public function index()
     {
         //
-        try{
-            $productos = Producto::all();
-            //convirtienod en array
-            $response = $productos->toArray();
-            $i = 0;
-            foreach($productos as $producto)
-            {
-                if ($producto->relleno) {
-                    $response[$i]["relleno"] = $producto->relleno->toArray();
-                } 
-                $response[$i]["sabores"] = $producto->producto_sabores->toArray();
-                $response[$i]["catalogo"] = $producto->catalogo->toArray();
-                $response[$i]["promociones"] = $producto->producto_promociones->toArray();
-                $response[$i]["cobertura"] = $producto->producto_coberturas->toArray();
-                          
-                $i++;
-            }
+        try {
+            // Obtener todos los productos con sus relaciones
+            $productos = Producto::with(['producto_sabores', 'relleno', 'catalogo', 'producto_promociones', 'producto_coberturas'])->get();
             
-        //return view('shop')->withTitle('COCOASWEET | SHOP')->with(['productos' => $productos]);
-
-            //dd ($response)
-
+            // Iterar sobre los productos y cargar los sabores en un array
+            $response = $productos->map(function ($producto) {
+                $productoArray = $producto->toArray();
+                
+                // Obtener los sabores y agregarlos al array del producto
+                $sabores = $producto->producto_sabores->map(function ($productoSabor) {
+                    return $productoSabor->sabor->toArray();
+                });
+                
+                $productoArray["sabores"] = $sabores->toArray();
+                
+                return $productoArray;
+            });
+            
             return $response;
-
-        }catch(\Exception $e)
-        {
-            return $e->getMessage();
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'fail', 'data' => null], 500);
         }
     }
 

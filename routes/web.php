@@ -1,5 +1,4 @@
 <?php
-
 use App\Http\Controllers\BancoController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -11,7 +10,6 @@ use App\Http\Controllers\CatalogoController;
 use App\Http\Controllers\CoberturaController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\CartController;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -30,26 +28,24 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
-Route::get('/admin',[HomeController::class,'dash'])->name('dash');
-Route::resource('sabores', SaborController::class);
-Route::resource('productos', ProductoController::class);
-Route::resource('rellenos', RellenoController::class);
-Route::resource('pedidos', PedidoController::class);
-Route::resource('catalogos', CatalogoController::class);
-Route::resource('coberturas', CoberturaController::class);
-Route::resource('bancos', BancoController::class);
-
+Route::get('/admin',[HomeController::class,'dash'])->name('admin.dash')->middleware('auth.admin');
+Route::resource('sabores', SaborController::class)->middleware('auth.admin');
+Route::resource('productos', ProductoController::class)->middleware('auth.admin');
+Route::resource('rellenos', RellenoController::class)->middleware('auth.admin');
+Route::resource('pedidos', PedidoController::class)->middleware('auth.admin');
+Route::resource('catalogos', CatalogoController::class)->middleware('auth.admin');
+Route::resource('coberturas', CoberturaController::class)->middleware('auth.admin');
+Route::resource('bancos', BancoController::class)->middleware('auth.admin');
 
 //Route::put('pedidos/change',[PedidoController::class,'changeState']);
 //Route::resource('rellenos', RellenoController::class);
 Route::get('/productos-reservas', [ProductoController::class, 'index']);
-
-
-Route::get('/', [CartController::class, 'shop'])->name('shop');
-Route::get('/cart', [CartController::class, 'cart'])->name('cart.index');
-Route::post('/add', [CartController::class, 'add'])->name('cart.store');
-Route::post('/update', [CartController::class, 'update'])->name('cart.update');
-Route::post('/remove', [CartController::class, 'remove'])->name('cart.remove');
+Route::get('/productos-cart', [ProductoController::class, 'index']);
+//Route::get('/', [CartController::class, 'shop'])->name('shop');
+//Route::get('/cart', [CartController::class, 'cart'])->name('cart.index');
+//Route::post('/add', [CartController::class, 'add'])->name('cart.store');
+//Route::post('/update', [CartController::class, 'update'])->name('cart.update');
+//Route::post('/remove', [CartController::class, 'remove'])->name('cart.remove');
 //Route::post('/clear', [CartController::class, 'clear'])->name('cart.clear');
 //Route::get('/cart-checkout','CartController@cart')->name('cart.checkout');
 //Route::post('/cart-clear', 'CartController@clear')->name('cart.clear');

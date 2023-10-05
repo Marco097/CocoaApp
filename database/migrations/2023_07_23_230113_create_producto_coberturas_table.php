@@ -14,10 +14,9 @@ return new class extends Migration
         Schema::create('producto_coberturas', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('producto_id');
-            $table->foreign('producto_id')->references('id')->on('productos');
+            $table->foreign('producto_id')->references('id')->on('productos')->nullable();
             $table->unsignedBigInteger('cobertura_id');
-            $table->foreign('cobertura_id')->references('id')->on('coberturas');
-
+            $table->foreign('cobertura_id')->references('id')->on('coberturas')->nullable();
             $table->timestamps();
         });
     }
