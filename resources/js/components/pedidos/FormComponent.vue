@@ -7,50 +7,68 @@
             <img :src="`/images/productos/${item.imagen}`" class="card-img-top">
             <div class="card-body">
               <h5 class="card-title text-bold">{{ item.nombre }}&nbsp;{{ item.relleno.nombre }}</h5>
-              <p class="card-text">Precio <b class="text-warning">${{ item.precio }}</b></p>
-              <div class="col-3">
-                <button @click="showDetalle" class="btn btn-primary btn-sm float-center">agregar al Carrto</button>
-              </div>
+              <p class="card-text">Precio <b class="text-warning">${{ item.precio }}</b></p> 
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detalleProductoModal" @click="showProducto(item)">Agregar</button>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- Modal de detalles del producto -->
+<!-- Modal de detalles del producto -->
 <div class="modal fade" id="detalleProductoModal" tabindex="-1" aria-labelledby="detalleProductoModalLabel" aria-hidden="true" ref="detalleProductoModal">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="detalleProductoModalLabel">Detalles del Producto</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="closeDetalle"></button>
-      </div>
-      <div class="modal-body">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th scope="col">Nombre</th>
-              <th scope="col">Precio</th>
-              <th scope="col">Toppins</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>{{ productoSeleccionado.nombre }}</td>
-              <td>${{ productoSeleccionado.precio }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="closeDetalle">Cerrar</button>
-        <button type="button" class="btn btn-primary" @click="addToReserva">Agregar al carrito</button>
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="detalleProductoModalLabel">Detalles del Producto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="closeDetalle"></button>
+        </div>
+        <div class="col-sm-4" >
+              <div class="modal-body" v-if="productoSeleccionado">
+  <table class="table table-bordered">
+    <tbody>
+      <tr>
+        <th scope="row">Nombre</th>
+        <td>{{ productoSeleccionado.nombre }}</td>
+      </tr>
+      
+      <tr>
+        <th scope="row">Precio</th>
+        <td>${{ productoSeleccionado.precio }}</td>
+      </tr>
+              <tr v-if="productoSeleccionado.relleno">
+                <th scope="row">Relleno</th>
+                <td>{{ productoSeleccionado.relleno.nombre }}</td>
+              </tr>
+              <tr>
+                <th scope="row">Cantidad</th>
+                <td><input type="number" v-model="productoSeleccionado.cantidad"></td>
+              </tr>
+              <tr>
+                <th scope="row">Toppings</th>
+                <td>
+                  <div class="form-group col-12">
+                            <select v-model="productoSeleccionado.cobertura_id" class="form-control">
+                                <option v-for="cob in coberturas" :value="cob.id" >
+                                {{ cob.nombre }}
+                                </option>
+                            </select>
+                        </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="closeDetalle">Cerrar</button>
+          <button type="button" class="btn btn-primary" @click="addToReserva">Agregar al carrito</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 </template>
+
 
 <script>
 export default {
@@ -59,66 +77,78 @@ export default {
     return {
       showModal: false,
       productos: [],
+     
       reservaForm: {
         id: null,
-        cantidad: new Number("0").toFixed(2),
         user: null,
-        detallePedido: []
+        detallePedido: [],
+        //coberturas: [],
       },
-      productoSeleccionado: {
-        nombre: "",
-        precio: 0,
-        coberturas: []
-      },
+
+      productoSeleccionado: null,
+      // productoSeleccionado: {
+      //   id: null,
+      //   nombre: null,
+      //   precio: null,
+      //   cobertura: null,
+      //   sabor: null,
+      //   relleno: null,
+      //   cantidad: new Number("0").toFixed(1),
+      // },
       imagePreview:null,
       mostrarProducto: -1,
       search: "",
       sabores: [],
       rellenos: [],
+      coberturas:[],
       
     };
   },
 
-  methods: {
-    async fetchProductos() {
+    methods: {
+  async fetchProductos() {
+    let me = this;
+    await this.axios.get("/productos-reservas").then((response) => {
+      console.log(response.data);
+      me.productos = response.data;
+    });
+  },
+  async fetchCoberturas() {
+    let me = this;
+    await this.axios.get("/coberturas").then((response) => {
+      console.log(response.data);
+      me.coberturas = response.data;
+    });
+  },
+  showProducto(item) {
+    //this.$('#detalleProductoModal').modal('show');
       let me = this;
-      await this.axios.get("/productos-reservas").then((response) => {
-        console.log(response.data);
-        me.productos = response.data;
-      });
-    },
-    async fetchCoberturas() {
-      let me = this;
-      await this.axios.get("/coberturas").then((response) => {
-        console.log(response.data);
-        me.coberturas = response.data;
-      });
-    },
-    showDetalle(item) {
-      let me = this;
-            $('#detalleProductoModal').modal('show');
-            me.mostrarProducto = me.productos.indexOf(producto);
-            me.reservaForm = Object.assign({}, producto);
-            me.imagePreview ="/images/productos/"+ me.reservaForm.imagen;
-            this.showModal = true;
-        },
-
-        //this.productoSeleccionado = item; // Almacena el producto seleccionado
-     // this.showModal = true; 
-    closeDetalle() {
-      this.showModal = false;
-    },
-
-    addToReserva() {
-      // Agrega el producto al carrito
-      this.reservaForm.detallePedido.push({
-        id: null,
-        cantidad: this.reservaForm.cantidad,
-        producto: this.productoSeleccionado,
-        cobertura: this.productoSeleccionado,
-      });
+    //  console.log("No funciona");
+    //  let clicks = 0;
+    //  clicks++;
+    //  console.log(clicks);
+      //$('#detalleProductoModal').modal('show');
+      this.productoSeleccionado = item;
       this.showModal = true;
-    },
+    //  me.imagePreview = "/images/productos/" + item.imagen;
+    //  this.showModal = true;
+
+  },
+  closeDetalle() {
+    this.showModal = false;
+    //this.productoSeleccionado = null;
+  },
+  addToReserva() {
+    // Agrega el producto al carrito
+    this.reservaForm.detallePedido.push({
+      id: null,
+      cantidad: this.reservaForm.cantidad,
+      producto: this.productoSeleccionado,
+      cobertura: this.reservaForm.cobertura,
+    });
+    this.showModal = false; // Cerrar el modal después de agregar al carrito
+  },
+
   },
   mounted() {
     this.fetchProductos();

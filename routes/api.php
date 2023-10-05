@@ -33,6 +33,6 @@ Route::resource('productos', ProductoController::class);
 Route::resource('promociones', PromocionController::class);
 Route::resource('coberturas', CoberturaController::class);
 Route::resource('bancos', BancoController::class);
-//Route::get('/productos-get', [ProductoController::class, 'index']);
+Route::get('/productos-get', [ProductoController::class, 'index']);
 Route::get('promociones/state', [PromocionController::class, 'showByState']);
 
