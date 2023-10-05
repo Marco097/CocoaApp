@@ -77,7 +77,7 @@
                   sabores:[],
                   sabor:{
                     id:null,
-                    nombre: ""
+                    nombre: "",
                   },
                   editedSabor: -1,
                   saborErrors:{

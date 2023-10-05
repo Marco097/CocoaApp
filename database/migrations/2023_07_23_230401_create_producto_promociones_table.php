@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('producto_promociones', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('producto_id');
-            $table->foreign('producto_id')->references('id')->on('productos');
+            $table->foreign('producto_id')->references('id')->on('productos')->nullable();
             $table->unsignedBigInteger('promocion_id');
-            $table->foreign('promocion_id')->references('id')->on('promociones');
+            $table->foreign('promocion_id')->references('id')->on('promociones')->nullable();
             $table->timestamps();
         });
     }
