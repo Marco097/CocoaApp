@@ -1,46 +1,18 @@
 @extends('layouts.app')
 
-<head>
-  <!--  <style>
-        body {
-            background-image: url('/imagenes/login.jpeg');
-            /* Ajusta los estilos de la imagen de fondo según tus necesidades */
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: center top;
-            background-position: center top 12%;
-        
-            
-        }
-    </style> -->
-</head>
 @section('content')
-<!-- 
-<style>
-    body {
-        background-image: url('{{ asset('imagenes/acerca.jpeg') }}'); /* Ruta de la imagen de fondo */
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center;
-    }
-</style> -->
-<div class="container" style="margin-top: 90px;">
+<div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-6" >
-            <br>
-            <div class="card" style="border-radius: 10px;  background: #e2cce6;">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">{{ __('Login') }}</div>
+
                 <div class="card-body">
-                    <div style="display: flex; align-items: center; justify-content: center; margin-top: -10%">
-                        <img src="{{ asset('imagenes/icono.jpeg') }}" style="width: 60px; height: 60px; border-radius: 50% ;">
-                    </div>
-                    
-                    <!--cuadro de login-->
-                    <div style= "text-align: center; border-radius: 10px; width: 150px; height: 30px;  margin: 0 auto;" >{{ __('Iniciar sesión') }}</div>
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
 
-                        <div class="row mb-4">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Correo electronico') }}</label>
+                        <div class="row mb-3">
+                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
 
                             <div class="col-md-6">
                                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
@@ -54,8 +26,8 @@
                         </div>
 
                         <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Contraseña') }}</label>
-                            
+                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
+
                             <div class="col-md-6">
                                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
 
@@ -73,7 +45,7 @@
                                     <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
 
                                     <label class="form-check-label" for="remember">
-                                        {{ __('Recordar contraseña') }}
+                                        {{ __('Remember Me') }}
                                     </label>
                                 </div>
                             </div>
@@ -81,23 +53,17 @@
 
                         <div class="row mb-0">
                             <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn " style="background-color:  #ed9fef ;">
-                                    {{ __('Iniciar Sesion') }}
+                                <button type="submit" class="btn btn-primary">
+                                    {{ __('Login') }}
                                 </button>
-                            </div>
-                        </div>
-                            
-                                <div class="row mb-0"> 
-                                    <i class="fa fa-eye"></i> <div class="col-md-8 offset-md-4" >
+
                                 @if (Route::has('password.request'))
                                     <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        {{ __('Olvidaste tu contraseña?') }}
+                                        {{ __('Forgot Your Password?') }}
                                     </a>
-                                </div>
-                            </div>
                                 @endif
-                           
-                    
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
