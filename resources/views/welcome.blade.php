@@ -1,4 +1,4 @@
- @extends('layouts.app')
+@extends('layouts.app')
       @section('content')
           <!-- ESTE APARTADO ES DONDE EL CLIENTE VERA LOS PRODUCTOS -->
           <!--darle color al menu -->
@@ -141,4 +141,3 @@
                     <br>
                     <br>     
 @endsection
-

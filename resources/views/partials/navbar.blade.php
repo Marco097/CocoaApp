@@ -1,4 +1,4 @@
-<!--  <nav class="navbar navbar-expand-md navbar-light fixed-top" style="background-color: #F0B1FA; ">
+<nav class="navbar navbar-expand-md navbar-light fixed-top" style="background-color: #F0B1FA; ">
     <div class="container" style="" >
         <div style="white-space: nowrap;">  el white-space evita que el texto se mueva cuando la página se visualiza en dispositivos móviles
         <img src="{{ asset('imagenes/icono.jpeg') }}" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
@@ -30,9 +30,14 @@
                     </a>
       
                 </li>
+                 <!-- Elemento del carrito con icono -->
+    <li class="nav-item">
+        <a class="nav-link" href="/ruta-a-tu-pagina-de-carrito">
+            <i class="fas fa-shopping-cart"></i>
+        </a>
+    </li>
             </ul>
         </div>
+
     </div>
 </nav>
--->
-

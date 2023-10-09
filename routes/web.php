@@ -40,18 +40,7 @@ Route::resource('bancos', BancoController::class)->middleware('auth.admin');
 //Route::put('pedidos/change',[PedidoController::class,'changeState']);
 //Route::resource('rellenos', RellenoController::class);
 Route::get('/productos-reservas', [ProductoController::class, 'index']);
-<<<<<<< HEAD
 Route::get('/productos-cart', [ProductoController::class, 'index']);
-=======
-
-
->>>>>>> f0aa187b5f234c60d091b5f31174033650fb9431
 //Route::get('/', [CartController::class, 'shop'])->name('shop');
 //Route::get('/cart', [CartController::class, 'cart'])->name('cart.index');
-//Route::post('/add', [CartController::class, 'add'])->name('cart.store');
-//Route::post('/update', [CartController::class, 'update'])->name('cart.update');
-//Route::post('/remove', [CartController::class, 'remove'])->name('cart.remove');
-//Route::post('/clear', [CartController::class, 'clear'])->name('cart.clear');
-//Route::get('/cart-checkout','CartController@cart')->name('cart.checkout');
-//Route::post('/cart-clear', 'CartController@clear')->name('cart.clear');
-//Route::post('/cart-removeitem', 'CartController@removeitem')->name('cart.removeitem');
+

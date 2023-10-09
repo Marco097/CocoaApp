@@ -41,7 +41,7 @@
                                     <td>
                                         <span v-for="sabor in item.sabores">{{ sabor.nombre }}</span>
                                     </td>
-                                    <td>{{ item.relleno ? item.relleno.nombre : '-'}}</td>
+                                    <td>{{ item.relleno ? item.relleno.nombre : '-' }}</td>
                                     <td>{{ item.catalogo.nombre }}</td>
                                     <td>{{ item.precio }}</td>
                                     <td>{{ item.existencias }}</td>
@@ -102,8 +102,8 @@
                         <div class="form-group col-6">
                             <label for="relleno">Relleno</label>
                             <select v-model="producto.relleno_id" class="form-control">
-                                <option v-for="relle in rellenos" :value="relle.id" >
-                                {{ relle.nombre }}
+                                <option v-for="relle in rellenos" :value="relle.id">
+                                    {{ relle.nombre }}
                                 </option>
                             </select>
                         </div>
@@ -279,16 +279,20 @@
             $('#productoModal').modal('show');
         },
         showDialogEditar(producto) {
-            let me = this;
-            $('#productoModal').modal('show');
-            me.editedProducto = me.productos.indexOf(producto);
-            me.producto = Object.assign({}, producto);
-            me.imagePreview ="/images/productos/"+ me.producto.imagen;
-
-             // Cargar el sabor y el relleno usando su ID
-            me.producto.sabor_id = producto.sabor ? producto.sabor.id : null;
-            me.producto.relleno_id = producto.relleno ? producto.relleno.id : null;
-        },
+    let me = this;
+    $('#productoModal').modal('show');
+    
+    // Verifica si 'producto' es nulo o no está definido antes de intentar acceder a sus propiedades.
+    if (producto) {
+        me.editedProducto = me.productos.indexOf(producto);
+        me.producto = Object.assign({}, producto);
+        me.imagePreview = "/images/productos/" + (me.producto.imagen || ''); // Asegúrate de que 'imagen' no sea nulo.
+        
+        // Verifica si 'producto.sabor' y 'producto.relleno' son nulos o no están definidos antes de intentar acceder a sus propiedades.
+        me.producto.sabor_id = producto.sabor ? producto.sabor.id : null;
+        me.producto.relleno_id = producto.relleno ? producto.relleno.id : null;
+    }
+},
         
         
         hideDialog() {
@@ -315,12 +319,12 @@
             let me = this;
             me.producto.nombre == '' ? me.productoErrors.nombre = true : me.productoErrors.nombre = false;
             me.producto.sabor_id == null ? me.productoErrors.sabor = true : me.productoErrors.sabor = false;
-            me.producto.relleno_id == null ? me.productoErrors.relleno = false : me.productoErrors.relleno = false;
-            me.producto.descripcion == '' ? me.productoErrors.descripcion = false : me.productoErrors.descripcion = false;
+            me.producto.relleno_id == null ? me.productoErrors.relleno = true : me.productoErrors.relleno = false;
+            me.producto.descripcion == '' ? me.productoErrors.descripcion = true : me.productoErrors.descripcion = false;
             me.producto.catalogo_id == null ? me.productoErrors.catalogo = true : me.productoErrors.catalogo = false;
             me.producto.precio == null ? me.productoErrors.precio = true : me.productoErrors.precio = false;
             me.producto.existencias == '' ? me.productoErrors.existencias= true : me.productoErrors.existencias = false;
-
+            
             if (me.producto.nombre) {
                 
                 let accion = me.producto.id == null ? "add" : "upd";
@@ -343,10 +347,9 @@
                 
                 formData.append("catalogo_id", me.producto.catalogo_id);
 
-               // if (me.productoErrors.relleno != null)
-                //{
+                 if (me.producto.relleno_id !== null) {
                     formData.append("relleno_id", me.producto.relleno_id);
-               // }
+                }
             
                 if(me.imageCar != null)
                 {
@@ -392,6 +395,7 @@
   
                 } 
             }
+            console.log(this.saveOrUpdate)
         },
         async eliminar(producto) {
             let me = this;
