@@ -1,16 +1,24 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
+    <head>
+        <!-- Otros encabezados -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    </head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ $title ?? 'COCOAWEET' }}</title>
+    
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
+
+    {{-- dos links de ale  --}}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
     <!-- Scripts -->
@@ -19,71 +27,82 @@
 <body>
     <div id="app">
         <!-- Navbar -->
-        <nav class="main-header navbar navbar-expand navbar-light navbar-white">
-            <div class="container">
-                <a href="" class="navbar-brand">
-                    <img src="images/icono.png" alt="" class="brand-image img-circle elevation-3"
-                         style="opacity: .8; width: 40px; height: 40px; border-radius: 50%;">
-                    <span class="brand-text font-weight-light">CocoaSweet</span>
-                </a>
-                <!-- Left navbar links -->
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                    </li>
-                    <li class="nav-item d-none d-sm-inline-block">
-                        <a href="" class="nav-link">Inicio</a>
-                    </li>
-                    <li class="nav-item d-none d-sm-inline-block">
-                        <a href="#" class="nav-link">Contacto</a>
-                    </li>
+        <nav class="navbar navbar-expand-md navbar-light fixed-top" style="background-color: #F0B1FA; ">
+            <div class="container" style="margin-top: 4px;" >
+                <div style="white-space: nowrap;"> <!-- el white-space evita que el texto se mueva cuando la página se visualiza en dispositivos móviles-->
+                <img src="{{ asset('imagenes/icono.jpeg') }}" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+                <span style="color: #BF209E; font-size: 25px;"> Cocoa </span>
+                <span style="color:#FF27D2; font-size: 23px;">Sweet</span> 
+            </div>  
+               
+    
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <!-- Left Side Of Navbar -->
+                <ul class="navbar-nav me-auto">
+
                 </ul>
-                <!-- SEARCH FORM -->
-                <form class="form-inline ml-3">
-                    <div class="input-group input-group-sm">
-                        <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
-                        <div class="input-group-append">
-                            <button class="btn btn-navbar" type="submit">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
-                </form>
 
- <!-- Authentication Links -->
- @guest
- @if (Route::has('login'))
-     <li class="nav-item">
-         <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-     </li>
- @endif
-
- @if (Route::has('register'))
-     <li class="nav-item">
-         <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-     </li>
- @endif
-@else
- <li class="nav-item dropdown">
-     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-         {{ Auth::user()->name }}
-     </a>
-
-     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-         <a class="dropdown-item" href="{{ route('logout') }}"
-            onclick="event.preventDefault();
-                          document.getElementById('logout-form').submit();">
-             {{ __('Logout') }}
-         </a>
-
-         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-             @csrf
-         </form>
-     </div>
-     <div>
+                <!-- Right Side Of Navbar -->
+                <ul class="navbar-nav d-flex ml-auto">
+                    <!-- Authentication Links -->
+                    @guest
+                    
+                    
+                        @if (Route::has('login'))
+                            <li class="nav-item" style="margin-right: 10px;">
+                                <a class="nav-link" href="{{ route('login') }}">
+                                    <i class="fas fa-sign-in-alt"></i> 
+                                </a>
+                            </li>
+                        @endif
+                
+                        @if (Route::has('register'))
+                            <li class="nav-item" style="margin-right: 10px;">
+                                <a class="nav-link" href="{{ route('register') }}">
+                                    <i class="fas fa-user-plus"></i> 
+                                </a>
+                            </li>
+                        @endif
+                    @else
+                        <li class="nav-item dropdown">
+                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                {{ Auth::user()->name }}
+                            </a>
+                            <!-- Apartado de nombre para irse para el login -->
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                   onclick="event.preventDefault();
+                                   document.getElementById('logout-form').submit();">
+                                   {{ __('Registrarse') }}
+                               </a>
+                               <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                   @csrf
+                               </form>
+                           </div>
+                       </li>
         
-     </div>
- </li>
-@endguest
+
+                <li class="nav-item dropdown">
+                    <a id="navbarDropdown" class="nav-link dropdown-toggle"
+                       href="#" role="button" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false"
+                    >
+                        <span class="badge badge-pill badge-dark">
+                            <i class="fa fa-shopping-cart"></i> {{ \Cart::getTotalQuantity()}}
+                        </span>
+                    </a>
+
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown" style="width: 450px; padding: 0px; border-color: #9DA0A2">
+                        <ul class="list-group" style="margin: 20px;">
+                            @include('partials.cart-drop')
+                        </ul>
+
+                    </div>
+                </li>
+                   @endguest
+                </ul>
+            
+            </div>
            </div>
         </nav>
         <!-- /.navbar -->

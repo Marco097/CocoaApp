@@ -10,7 +10,8 @@
               <p class="card-text">Precio <b class="text-warning">${{ item.precio }}</b></p>
               <div class="input-group mb-3">
                 <input type="number" v-model="item.cantidad" min="1" class="form-control col-3" placeholder="Cantidad">
-                <a href="#" class="btn btn-primary" @click="addToReserva(item, item.cantidad)">Agregar</a>
+                <a href="#" class="btn btn-primary" @click="addToReserva(item, item.cantidad)"> <i class="fas fa-shopping-cart" style="font-size: 20px; color: #000000;"></i></a>
+
               </div>
             </div>
           </div>
@@ -32,6 +33,7 @@ export default {
         user: null,
         detallePedido: [],
         cantidad: null,
+        showCarrito: false, 
       },
       productoSeleccionado: null,
       imagePreview: null,
@@ -40,6 +42,7 @@ export default {
       sabores: [],
       rellenos: [],
       coberturas: [],
+      showCarrito: false, 
     };
   },
   methods: {
@@ -53,18 +56,6 @@ export default {
         }));
       });
     },
-    // async fetchCoberturas() {
-    //   let me = this;
-    //   await this.axios.get("/coberturas").then((response) => {
-    //     console.log(response.data);
-    //     me.coberturas = response.data;
-    //   });
-    // },
-    // showProducto(item) {
-    //   let me = this;
-    //   this.productoSeleccionado = item;
-    //   this.showModal = true;
-    // },
     addToReserva(item, cantidad) {
       if (cantidad > 0) {
         this.reservaForm.detallePedido.push({

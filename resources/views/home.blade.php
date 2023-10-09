@@ -13,7 +13,6 @@
                             {{ session('status') }}
                         </div>
                     @endif
-
                   <div id="app">
                     <form-component></form-component>
                   </div>

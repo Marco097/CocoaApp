@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::table('productos', function (Blueprint $table) {
             //
-            $table->integer('existencias')->nullable();
+            //$table->integer('existencias')->nullable();
+            $table->integer('existencias')->default(0);
         });
     }
 

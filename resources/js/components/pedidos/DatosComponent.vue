@@ -7,7 +7,7 @@
   
   <script>
   import FormComponent from './FormComponent.vue';
-  import CartComponent from './CartComponent.vue';
+  import CartComponent from './carrito.vue';
   
   export default {
     components: {

@@ -1,4 +1,4 @@
-<!-- Navbar -->
+{{-- <!-- Navbar -->
 <nav class="main-header navbar navbar-expand navbar-light navbar-white">
     <div class="container">
       <a href="index3.html" class="navbar-brand">
@@ -43,4 +43,4 @@
       </ul>
     </div>
   </nav>
-  <!-- /.navbar -->
+ /.navbar }}

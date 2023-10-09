@@ -1,23 +1,17 @@
-@extends('adminlte::page')
-
-@section('title', 'Toppings')
-
-@section('content_header')
-    <h1>Carrito</h1>
-@stop
+@extends('layouts.app')
 
 @section('content')
-    <div id = "app">
-      <cart-component></cart-component>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">{{ __('Carro') }}</div>
+
+                <div id="app">
+                    <cart-component></cart-component>
+                   </div>
+            </div>
+        </div>
     </div>
-@stop
-
-@section('css')
-    <!--<link rel="stylesheet" href="/css/admin_custom.css">-->
-    @vite ('resources/css/app.css')
-@stop
-
-@section('js')
-   <!-- <script> console.log('Hi!'); </script>-->
-   @vite ('resources/js/app.js')
-@stop
+</div>
+@endsection

@@ -16,12 +16,11 @@ return new class extends Migration
             $table->string('nombre', 70);
             $table->string('descripcion', 200)->nullable();
             $table->decimal('precio', 4,2);
-            $table->integer('existencia',100)->autoIncrement(false)->change();
             $table->date('hecho');
             $table->date('vencimiento');
             $table->string('imagen', 100);
             $table->unsignedBigInteger('relleno_id')->nullable();
-            $table->foreign('relleno_id')->references('id')->on('rellenos');
+            $table->foreign('relleno_id')->references('id')->on('rellenos')->nullable();
             $table->unsignedBigInteger('catalogo_id');
             $table->foreign('catalogo_id')->references('id')->on('catalogos');
             $table->timestamps();

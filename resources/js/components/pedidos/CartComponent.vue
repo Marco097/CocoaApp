@@ -1,119 +1,75 @@
 <template>
-    <div id="show">
-      <div v-show="showDiv">
-        <h4 class="text-bold text-black">Mostrar datos de la Reserva</h4>
-        <h4>Detalle de la Reserva</h4>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Descripcion</th>
-              <th>Precio</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(item, index) in reservaForm.detallePedido" :key="index">
-              <td>{{ item.producto.nombre }}</td>
-              <td>{{ item.producto.descripcion }}</td>
-              <td>${{ item.producto.precio }}</td>
-              <td>
-                <button type="button" class="btn btn-danger" @click="removeItem(index)">Eliminar
-                  <i class="fa fa-trash" aria-hidden="false"></i>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="3" class="text-center"><b>Total</b></td>
-              <td>${{ total }}</td>
-            </tr>
-            <tr>
-              <td colspan="4" class="text-center">
-                <button
-                  type="button"
-                  class="btn btn-primary text-bg-primary"
-                  @click="saveReserva()"
-                  :disabled="reservaForm.detallePedido.length < 1"
-                >
-                  Confirmar Reserva
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    <!-- Contenido del carrito (se muestra al hacer clic en el icono) -->
+    <div v-if="showCart" class="cart-dropdown">
+      <ul class="list-group">
+        <li class="list-group-item" v-for="item in cartItems" :key="item.id">
+          <div class="row">
+            <div class="col-lg-3">
+              <img :src="item.image" style="width: 50px; height: 50px;">
+            </div>
+            <div class="col-lg-6">
+              <b>{{ item.name }}</b>
+              <br><small>Qty: {{ item.quantity }}</small>
+            </div>
+            <div class="col-lg-3">
+              <p>${{ item.price }}</p>
+            </div>
+          </div>
+        </li>
+      </ul>
+      <div class="cart-info">
+        <span>Total: ${{ getTotal }}</span>
+        <button class="btn btn-secondary btn-sm" @click="clearCart">Vaciar Carrito</button>
       </div>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    props: ['user'],
-    data() {
-      return {
-        reservaForm: {
-          id: null,
-          user: null,
-          detallePedido: [],
-        },
-        showDiv: false,
-      };
+
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      showCart: false,
+      cartItems: [], // Aquí almacena los elementos del carrito
+    };
+  },
+  computed: {
+    getQuantity() {
+      // Calcula la cantidad total de productos en el carrito
+      return this.cartItems.reduce((total, item) => total + item.quantity, 0);
     },
-  
-    computed: {
-      total() {
-        var totalReserva = 0;
-        this.reservaForm.detallePedido.forEach((element) => {
-          totalReserva += element.producto.precio;
-        });
-        return totalReserva;
-      },
+    getTotal() {
+      // Calcula el total de la compra
+      return this.cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
     },
-  
-    methods: {
-        async fetchProductos() {
-      let me = this;
-      await this.axios.get("/productos-cart").then((response) => {
-        console.log(response.data);
-        me.productos = response.data.map((item) => ({
-          ...item,
-          cantidad: 0,
-        }));
-      });
+  },
+  methods: {
+    toggleCart() {
+      this.showCart = !this.showCart;
     },
-      removeItem(index) {
-        this.reservaForm.detallePedido.splice(index, 1);
-      },
-      async saveReserva(){
-            let me = this;
-            if(me.reservaForm.fReserva.length > 0 && me.reservaForm.detalleReserva.length > 0){
-                //seteando datos faltantes para la reserva
-                me.reservaForm.user = this.user;
-                var f = new Date();
-                me.reservaForm.fReserva = f.getFullYear()+"-" + f.getMonth()+"-"+ f.getDate();
-                //me.reservaForm.cantidad = me.reservaForm.detalleReserva.length;
-                
-                me.reservaForm.cantidad = me.reservaForm.detalleReserva.length;
-              
-                await this.axios.post(`/pedidos`,me.reservaForm)
-                .then(response =>{
-                    if(response.status == 201){
-                        this.$swal.fire("success", "Su reserva se ha registrado con exito, Pronto nos comunicaremos");
-                        me.reservaForm.detalleReserva = [];
-                        me.showDiv = false;
-                    }
-                }).catch(errors =>{
-                    console.log(errors);
-                })
-         }else{
-            this.$swal.fire("warning", "Complete los datos de la reserva");
-         }
-      }, 
+    clearCart() {
+      // Lógica para vaciar el carrito
+      this.cartItems = [];
+      this.showCart = false;
     },
-  
-    mounted() {
-        this.fetchProductos();
-        console.log(this.reservaForm);
-    },
-  };
-  </script>
-  
+    // Resto de los métodos para agregar, eliminar y gestionar productos en el carrito
+  },
+};
+</script>
+
+<style scoped>
+/* Estilos CSS para el componente */
+.cart-dropdown {
+  position: absolute;
+  background-color: #fff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  padding: 10px;
+  right: 0;
+  top: 60px;
+  width: 300px;
+  z-index: 1;
+  text-align: left;
+}
+</style>
+
