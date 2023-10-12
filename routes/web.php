@@ -40,7 +40,7 @@ Auth::routes();
 Route::get('/admin',[HomeController::class,'dash']); //->name('admin.dash')->middleware('auth.admin');
 Route::resource('sabores', SaborController::class); //->middleware('auth.admin');
 
- Route::resource('productos', ProductoController::class); //->middleware('auth.admin');
+ //Route::resource('productos', ProductoController::class); //->middleware('auth.admin');
 
 Route::resource('rellenos', RellenoController::class); //->middleware('auth.admin');
 Route::resource('pedidos', PedidoController::class)->middleware('auth.admin');
