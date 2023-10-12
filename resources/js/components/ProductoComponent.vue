@@ -11,6 +11,8 @@
                             <div class="col-3">
                                 <button @click="showDialog" class="btn btn-success btn-sm float-end">Nuevo</button>
                             </div>
+                            
+                                                        
                            <!-- <div class="col-3">
                               <a href="/reportes/autos/pdf" target="_blank" class="btn btn-primary btn-sm">Generar PDF</a>
                             </div>-->
@@ -34,20 +36,22 @@
                                     <th scope="col">Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                          <tbody>
                                 <tr v-for="item in productos" :key="item.id">
                                     <td>{{ item.nombre }}</td>
-                                    <td>{{ item.descripcion}}</td>  
+                                    <td>{{ item.descripcion }}</td>
                                     <td>
                                         <span v-for="sabor in item.sabores">{{ sabor.nombre }}</span>
                                     </td>
-                                    <td>{{ item.relleno ? item.relleno.nombre : '-' }}</td>
-                                    <td>{{ item.catalogo.nombre }}</td>
+                                    <td>{{ item.relleno && item.relleno.nombre ? item.relleno.nombre : '-' }}</td>
+                                    <td>{{ item.catalogo && item.catalogo.nombre ? item.catalogo.nombre : '-' }}</td>
                                     <td>{{ item.precio }}</td>
                                     <td>{{ item.existencias }}</td>
-                                    <td> {{ item.hecho }}</td>
-                                    <td> {{ item.vencimiento }} </td>
-                                   <td><img :src="`/images/productos/${item.imagen}`" :alt="`${item.imagen}`" style="width:100px;height: 100px"></td>
+                                    <td>{{ item.hecho }}</td>
+                                    <td>{{ item.vencimiento }}</td>
+                                    <td><img :src="`/images/productos/${item.imagen || ''}`" :alt="`${item.imagen || ''}`"
+                                            style="width:100px;height: 100px"></td>
+
                                     <td>
                                         <button type="button" class="btn btn-primary btn-sm"
                                             @click="showDialogEditar(item)">Editar</button>
@@ -317,13 +321,13 @@
         
         async saveOrUpdate() {
             let me = this;
-            me.producto.nombre == '' ? me.productoErrors.nombre = true : me.productoErrors.nombre = false;
-            me.producto.sabor_id == null ? me.productoErrors.sabor = true : me.productoErrors.sabor = false;
-            me.producto.relleno_id == null ? me.productoErrors.relleno = true : me.productoErrors.relleno = false;
-            me.producto.descripcion == '' ? me.productoErrors.descripcion = true : me.productoErrors.descripcion = false;
-            me.producto.catalogo_id == null ? me.productoErrors.catalogo = true : me.productoErrors.catalogo = false;
-            me.producto.precio == null ? me.productoErrors.precio = true : me.productoErrors.precio = false;
-            me.producto.existencias == '' ? me.productoErrors.existencias= true : me.productoErrors.existencias = false;
+            me.producto.nombre == '' ? me.productoErrors.nombre = true : me.productoErrors.nombre = false
+            me.producto.sabor_id == null ? me.productoErrors.sabor = true : me.productoErrors.sabor_id = false
+            me.producto.relleno_id == null ? me.productoErrors.relleno = true : me.productoErrors.relleno_id = false
+            me.producto.descripcion == '' ? me.productoErrors.descripcion = true : me.productoErrors.descripcion = false
+            me.producto.catalogo_id == null ? me.productoErrors.catalogo = true : me.productoErrors.catalogo_id = false
+            me.producto.precio == null ? me.productoErrors.precio = true : me.productoErrors.precio = false
+            me.producto.existencias == '' ? me.productoErrors.existencias= true : me.productoErrors.existencias = false
             
             if (me.producto.nombre) {
                 
@@ -366,11 +370,11 @@
                     //peticion para guardar una auto
                     //me.producto.imagen = "none.jpg";
                     formData.append("estado",me.producto.estado);
-                    await this.axios.post('/productos', formData, headers)
+                    await this.axios.post('/productos', me.producto) //cambie esto alex
                         .then(response => {
                             console.log(response.data);
                             if (response.status == 201) {
-                                me.verificarAccion(response.data.data, response.status, accion);
+                                me.verificarAccion(response.data.data,response.status,accion);
                                 me.hideDialog();
                             }
                         }).catch(errors => {
@@ -380,14 +384,15 @@
                     //peticion para actualizar una marca
                    
                    //formData.append("estado",me.producto.estado)
-                   formData.append("id",me.producto.id)
+                   
+                   //formData.append("id",me.producto.id)
                    //peticion par actualizar un auto
-                   await this.axios.post(`/productos/${me.producto.id}`, formData, headers)
+                   await this.axios.put(`/productos/${me.producto.id}`, me.producto)
                     .then(response => {
                             //console.log(response.data);
-                            if (response.status == 202) {
-                                me.verificarAccion(response.data.data, response.status, accion);
-                                me.hideDialog();
+                            if(response.status == 202){
+                             me.verificarAccion(response.data.data,response.status,accion);
+                             me.hideDialog();
                             }
                         }).catch(errors => {
                             console.log(errors);
@@ -395,7 +400,7 @@
   
                 } 
             }
-            console.log(this.saveOrUpdate)
+           // console.log(this.saveOrUpdate)
         },
         async eliminar(producto) {
             let me = this;

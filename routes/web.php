@@ -21,21 +21,33 @@ use App\Http\Controllers\CartController;
 |
 */
 
-Route::get('/', function () {
+// le agregue el home
+Route::get('/home', function () {
     return view('welcome');
 });
 
+// Route::get('/promociones', function () {
+//     return view('home'); // Esto asume que 'home.blade.php' está en la carpeta 'resources/views'
+// });
+
+Route::get('/productos', function () {
+    return view('home'); 
+});
+
+
 Auth::routes();
 
-Route::get('/home', [HomeController::class, 'index'])->name('home');
-Route::get('/admin',[HomeController::class,'dash'])->name('admin.dash')->middleware('auth.admin');
-Route::resource('sabores', SaborController::class)->middleware('auth.admin');
-Route::resource('productos', ProductoController::class)->middleware('auth.admin');
-Route::resource('rellenos', RellenoController::class)->middleware('auth.admin');
+Route::get('/admin',[HomeController::class,'dash']); //->name('admin.dash')->middleware('auth.admin');
+Route::resource('sabores', SaborController::class); //->middleware('auth.admin');
+
+ Route::resource('productos', ProductoController::class); //->middleware('auth.admin');
+
+Route::resource('rellenos', RellenoController::class); //->middleware('auth.admin');
 Route::resource('pedidos', PedidoController::class)->middleware('auth.admin');
-Route::resource('catalogos', CatalogoController::class)->middleware('auth.admin');
+Route::resource('catalogos', CatalogoController::class); //->middleware('auth.admin');
 Route::resource('coberturas', CoberturaController::class)->middleware('auth.admin');
 Route::resource('bancos', BancoController::class)->middleware('auth.admin');
+
 
 //Route::put('pedidos/change',[PedidoController::class,'changeState']);
 //Route::resource('rellenos', RellenoController::class);
