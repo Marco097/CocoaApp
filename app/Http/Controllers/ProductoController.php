@@ -201,7 +201,6 @@ class ProductoController extends Controller
     {
         //
         try{
-
             $errores = 0;
             DB::beginTransaction();
             $producto = Producto::findOrFail($id);
@@ -210,11 +209,10 @@ class ProductoController extends Controller
             $producto->precio = $request->precio;
             $producto->existencias = $request->existencias;
             $producto->hecho = $request->hecho;
-            $producto->vencimiento = $request->vencimiento;            
+            $producto->vencimiento = $request->vencimiento; 
             //$producto->imagen = $request->imagen;
             $producto->relleno_id = $request->relleno_id;
             $producto->catalogo_id = $request->catalogo_id;
-            
             $imagenAnterior = $producto->imagen;
             //COMPROBANDO SI VIENE UNA IMAGEN
             if($request->hasFile('imagen'))
@@ -234,53 +232,51 @@ class ProductoController extends Controller
             $imagen->move(public_path('/images/productos/'),$nombreImagen);
             $producto->imagen = $nombreImagen;
         }else{
-           
-                $producto->imagen = 'none.jpg';
-            
+            $producto->imagen = 'none.jpg';            
         } 
-         // Guardar las relaciones con sabores
+        $producto->save();
+
+         //Guardar las relaciones con sabores
          $sabore = $request->productoSabor;
-         //if (!is_null($sabore) && is_array($sabore)) 
-         //{
+         if (!is_null($sabore) && is_array($sabore)) 
+         {
              foreach ($sabore as $key => $sb) {
-                 $productoSabor = ProductoSabor::findOrFail($sabore['id']);
+                 $productoSabor = ProductoSabor::findOrFail($sb['id']);
                  $productoSabor->sabor_id = $sb['id'];
                  $productoSabor->producto_id = $producto->id;
  
                  if ($productoSabor->update() <= 0) {
-                     $errores++;
                  }
              }
-         //}
+            
+         }
          //guardando la relcion de promociones 
          $promocio = $request->productoPromocion;
-        //if (!is_null($promocio) && is_array($promocio)) 
-         //{
+        if (!is_null($promocio) && is_array($promocio)) 
+         {
              foreach ($promocio as $key => $promo) {
-                 $productoPromocion = ProductoPromocion::findOrFail($promocio['id']);
+                 $productoPromocion = ProductoPromocion::findOrFail($promo['id']);
                  $productoPromocion->promocion_id = $promo['id'];
                  $productoPromocion->producto_id = $producto->id;
  
                  if ($productoPromocion->update() <= 0) {
-                     $errores++;
                  }
              }
-         //}
+         }
          //GUARDANDO LA COBERTURA
          
          $cobertu = $request->productoCobertura;
-         //if (!is_null($cobertu) && is_array($cobertu))
-         //{
+         if (!is_null($cobertu) && is_array($cobertu))
+         {
              foreach ($cobertu as $key => $cob) {
-                 $productoCobertura = ProductoCobertura::findOrFail($cobertu['id']);
+                 $productoCobertura = ProductoCobertura::findOrFail($cob['id']);
                  $productoCobertura->cobertura_id = $cob['id'];
                  $productoCobertura->producto_id = $producto->id;
  
                  if ($productoCobertura->update() <= 0) {
-                     $errores++;
                  }
              }
-        // }       
+         }       
             
          if ($errores == 0){
             DB::commit();
@@ -293,31 +289,19 @@ class ProductoController extends Controller
         } catch(\Exception $e)
         {
             DB::rollBack();
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);        
         }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function inactivos(Request $request)
     {
-        //
-        try{
-            $producto = Producto::findOrFail($id);
-            $imagenAnterior = $producto->imagen;
-            $imagePath = public_path() . '/images/productos/' .$imagenAnterior;
-            if($imagenAnterior != 'none.jpg')
-            {
-                unlink($imagePath);
-            }
-            if ($producto->delete()>=1)
-            {
-               return response()->json(['status'=>'ok','data'=>null],205);
-            }
-         } catch(\Exception $e)
-                {
-                    return $e->getMessage();
-                }
-                
+       $ProduUpdate = Producto::findOrFail($request->id)->update(['estatus' => $request->estatus]);
+
+       if($request->estatus ==0){
+       }
+       
     }
 }

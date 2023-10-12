@@ -11,6 +11,8 @@
                             <div class="col-3">
                                 <button @click="showDialog" class="btn btn-success btn-sm float-end">Nuevo</button>
                             </div>
+                            
+                                                        
                             <!-- <div class="col-3">
                               <a href="/reportes/autos/pdf" target="_blank" class="btn btn-primary btn-sm">Generar PDF</a>
                             </div>-->
@@ -34,7 +36,7 @@
                                     <th scope="col">Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                          <tbody>
                                 <tr v-for="item in productos" :key="item.id">
                                     <td>{{ item.nombre }}</td>
                                     <td>{{ item.descripcion }}</td>
@@ -324,9 +326,9 @@ export default {
             me.producto.relleno_id == null ? me.productoErrors.relleno = true : me.productoErrors.relleno = false;
             me.producto.descripcion == '' ? me.productoErrors.descripcion = true : me.productoErrors.descripcion = false;
             me.producto.catalogo_id == null ? me.productoErrors.catalogo = true : me.productoErrors.catalogo = false;
-            me.producto.precio == '' ? me.productoErrors.precio = true : me.productoErrors.precio = false;
-            me.producto.existencias == '' ? me.productoErrors.existencias = true : me.productoErrors.existencias = false;
-
+            me.producto.precio == null ? me.productoErrors.precio = true : me.productoErrors.precio = false;
+            me.producto.existencias == '' ? me.productoErrors.existencias= true : me.productoErrors.existencias = false;
+            
             if (me.producto.nombre) {
 
                 let accion = me.producto.id == null ? "add" : "upd";
@@ -365,12 +367,12 @@ export default {
                 if (accion == "add") {
                     //peticion para guardar una auto
                     //me.producto.imagen = "none.jpg";
-                    formData.append("estado", me.producto.estado);
+                    formData.append("estado",me.producto.estado);
                     await this.axios.post('/productos', formData, headers)
                         .then(response => {
                             console.log(response.data);
                             if (response.status == 201) {
-                                me.verificarAccion(response.data.data, response.status, accion);
+                                me.verificarAccion(response.data.data,response.status,accion);
                                 me.hideDialog();
                             }
                         }).catch(errors => {
@@ -378,16 +380,16 @@ export default {
                         })
                 } else {
                     //peticion para actualizar una marca
-
-                    //formData.append("estado",me.producto.estado)
-                    formData.append("id", me.producto.id)
-                    //peticion par actualizar un auto
-                    await this.axios.post(`/productos/${me.producto.id}`, formData, headers)
-                        .then(response => {
+                   
+                   //formData.append("estado",me.producto.estado)
+                   formData.append("id",me.producto.id)
+                   //peticion par actualizar un auto
+                   await this.axios.post(`/productos/${me.producto.id}`, formData, headers)
+                    .then(response => {
                             //console.log(response.data);
-                            if (response.status == 202) {
-                                me.verificarAccion(response.data.data, response.status, accion);
-                                me.hideDialog();
+                            if(response.status == 202){
+                             me.verificarAccion(response.data.data,response.status,accion);
+                             me.hideDialog();
                             }
                         }).catch(errors => {
                             console.log(errors);
@@ -395,7 +397,7 @@ export default {
 
                 }
             }
-            //console.log(this.saveOrUpdate)
+            console.log(this.saveOrUpdate)
         },
         async eliminar(producto) {
             let me = this;

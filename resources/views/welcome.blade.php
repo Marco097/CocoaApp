@@ -16,8 +16,10 @@
                         <a class="navbar-brand" style="color:#FFFFFF" href="#carouselExampleFade">Inicio</a>
                     </li>
                     <li class="nav-item text-center">
-                        <a class="navbar-brand" style="color: #FFFFFF; font-size: 19px;"  href="#acerca-de">promociones</a>
-                    </li>
+                      <a class="navbar-brand" style="color: #FFFFFF; font-size: 19px;" href="{{ url('/productos') }}">productos</a>
+                  </li>
+                  
+      
                     <li class="nav-item text-center">
                         <a class="navbar-brand" style="color: #FFFFFF; font-size: 19px;" href="#acerca-de" >Acerca de</a>
                     </li>
@@ -26,7 +28,7 @@
                   </li>
                     <li class="nav-item dropdown  nav-item text-center">
                       <a class="nav-link dropdown-toggle" style="color:#FFFFFF"  href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          Productos
+                          promociones
                       </a>
                       <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                           <a class="dropdown-item" href="#">Paletas</a>
