@@ -1,62 +1,68 @@
 <?php
- 
- namespace App\Http\Controllers;
- 
+
+namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
-use App\Models\Producto; 
- 
+use App\Models\Producto;
+use Darryldecode\Cart\Cart;
+use Exception;
+
 class CartController extends Controller
 {
-    public function index()
-    {
-        $productos = Producto::all();
-       // return view('home', compact('productos'));
+
+     public function index()
+     {
+         $productos = Producto::all();
+        //dd($products);
+         return view('home')->with(['productos' => $productos]);
+     }
+
+    
+
+    public function cart()  {
+        $cartCollection = Cart::getContent();
+        //dd($cartCollection);
+        return view('cart')->with(['cartCollection' => $cartCollection]);;
     }
- 
-    public function cart()
-    {
-        return view('cart');
-    }
-    public function addToCart($id)
-    {
-        $product = Producto::findOrFail($id);
- 
-        $cart = session()->get('cart', []);
- 
-        if(isset($cart[$id])) {
-            $cart[$id]['quantity']++;
-        }  else {
-            $cart[$id] = [
-                "product_name" => $product->nombre,
-                "photo" => $product->imagen,
-                "price" => $product->precio,
-                "quantity" => 1
-            ];
-        }
- 
-        session()->put('cart', $cart);
-        return redirect()->back()->with('success', 'Product add to cart successfully!');
-    }
- 
-    public function update(Request $request)
-    {
-        if($request->id && $request->cantidad){
-            $cart = session()->get('cart');
-            $cart[$request->id]["quantity"] = $request->cantidad;
-            session()->put('cart', $cart);
-            session()->flash('success', 'Cart successfully updated!');
+    public function remove(Request $request){
+        try{
+
+        }catch(Exception $e)
+        {
+            
         }
     }
- 
-    public function remove(Request $request)
-    {
-        if($request->id) {
-            $cart = session()->get('cart');
-            if(isset($cart[$request->id])) {
-                unset($cart[$request->id]);
-                session()->put('cart', $cart);
-            }
-            session()->flash('success', 'Product successfully removed!');
-        }
+
+    public function add(Request $request){
+        Cart::add(array(
+            'id' => $request->id,
+            'name' => $request->name,
+            'price' => $request->price,
+            'quantity' => $request->quantity,
+            'attributes' => array(
+                'image' => $request->img,
+                'slug' => $request->slug
+            )
+        ));
+        return redirect()->route('cart.index')->with('success_msg', 'Item Agregado a sú Carrito!');
     }
+
+    public function update(Request $request){
+        Cart::update($request->id,
+            array(
+                'quantity' => array(
+                    'relative' => false,
+                    'value' => $request->quantity
+                ),
+        ));
+        return redirect()->route('cart.index')->with('success_msg', 'Cart is Updated!');
+    }
+
+    public function clear(){
+        Cart::clear();
+        return redirect()->route('cart.index')->with('success_msg', 'Car is cleared!');
+    }
+
+
+
 }

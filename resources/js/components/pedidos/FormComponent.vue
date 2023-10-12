@@ -8,10 +8,10 @@
             <div class="card-body">
               <h5 class="card-title text-bold">{{ item.nombre }}&nbsp;{{ item.relleno.nombre }}</h5>
               <p class="card-text">Precio <b class="text-warning">${{ item.precio }}</b></p>
+              
               <div class="input-group mb-3">
                 <input type="number" v-model="item.cantidad" min="1" class="form-control col-3" placeholder="Cantidad">
                 <a href="#" class="btn btn-primary" @click="addToReserva(item, item.cantidad)"> <i class="fas fa-shopping-cart" style="font-size: 20px; color: #000000;"></i></a>
-
               </div>
             </div>
           </div>
@@ -56,15 +56,26 @@ export default {
         }));
       });
     },
-    addToReserva(item, cantidad) {
-      if (cantidad > 0) {
-        this.reservaForm.detallePedido.push({
-          id: null,
-          cantidad: cantidad,
-          producto: item,
-        });
-      }
-    },
+    async addToReserva(item, cantidad) {
+  if (cantidad > 0) {
+    this.reservaForm.detallePedido.push({
+      id: null,
+      cantidad: cantidad,
+      producto: item,
+    });
+
+    // Realizar una solicitud HTTP POST para enviar los datos al servidor
+    await this.axios.post('/add', this.reservaForm)
+      .then((response) => {
+        // Manejar la respuesta del servidor, si es necesario
+        console.log('Producto agregado al carrito', response.data);
+      })
+      .catch((error) => {
+        console.error('Error al agregar el producto al carrito', error);
+      });
+  }
+}
+
   },
   mounted() {
     this.fetchProductos();
