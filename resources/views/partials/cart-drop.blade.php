@@ -1,15 +1,15 @@
-@if(count(\Cart::getContent()) > 0)
-    @foreach(\Cart::getContent() as $item)
+
+@if(count(Cart::getContent()) > 0)
+    @foreach(Cart::getContent() as $item)
         <li class="list-group-item">
             <div class="row">
                 <div class="col-lg-3">
-                    <img src="/images/productos{{ $item->attributes->image }}"
-                         style="width: 50px; height: 50px;"
-                    >
+                    <img src="/images/productos/{{ $item->attributes->image }}"
+                         style="width: 50px; height: 50px;">
                 </div>
                 <div class="col-lg-6">
                     <b>{{$item->name}}</b>
-                    <br><small>Qty: {{$item->quantity}}</small>
+                    <br><small>Cantidad: {{$item->quantity}}</small>
                 </div>
                 <div class="col-lg-3">
                     <p>${{ \Cart::get($item->id)->getPriceSum() }}</p>
@@ -25,9 +25,9 @@
                 <b>Total: </b>${{ \Cart::getTotal() }}
             </div>
             <div class="col-lg-2">
-                <form action="{{ route('cart.clear') }}" method="POST">
+                <form action="{{ route('cart.remove') }}" method="POST">
                     {{ csrf_field() }}
-                    <button class="btn btn-secondary btn-sm"><i class="fa fa-trash"></i></button>
+                    <button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
                 </form>
             </div>
         </div>

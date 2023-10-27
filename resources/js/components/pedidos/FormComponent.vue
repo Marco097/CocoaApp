@@ -6,9 +6,8 @@
           <div class="card">
             <img :src="`/images/productos/${item.imagen}`" class="card-img-top">
             <div class="card-body">
-              <h5 class="card-title text-bold">{{ item.nombre }}&nbsp;{{ item.relleno.nombre }}</h5>
-              <p class="card-text">Precio <b class="text-warning">${{ item.precio }}</b></p>
-              
+              <h5 class="card-title text-bold">{{ item.nombre }}</h5>
+              <p class="card-text">Precio <b class="text-warning">${{ item.precio }}</b></p>             
               <div class="input-group mb-3">
                 <input type="number" v-model="item.cantidad" min="1" class="form-control col-3" placeholder="Cantidad">
                 <a href="#" class="btn btn-primary" @click="addToReserva(item, item.cantidad)"> <i class="fas fa-shopping-cart" style="font-size: 20px; color: #000000;"></i></a>
@@ -31,9 +30,8 @@ export default {
       reservaForm: {
         id: null,
         user: null,
-        detallePedido: [],
+        detallePedido: [],     
         cantidad: null,
-        showCarrito: false, 
       },
       productoSeleccionado: null,
       imagePreview: null,
@@ -43,6 +41,7 @@ export default {
       rellenos: [],
       coberturas: [],
       showCarrito: false, 
+      
     };
   },
   methods: {
@@ -51,35 +50,31 @@ export default {
       await this.axios.get("/productos-reservas").then((response) => {
         console.log(response.data);
         me.productos = response.data.map((item) => ({
-          ...item,
+          item,
           cantidad: 0,
         }));
       });
     },
-    async addToReserva(item, cantidad) {
-  if (cantidad > 0) {
-    this.reservaForm.detallePedido.push({
-      id: null,
-      cantidad: cantidad,
-      producto: item,
-    });
 
-    // Realizar una solicitud HTTP POST para enviar los datos al servidor
-    await this.axios.post('/add', this.reservaForm)
-      .then((response) => {
-        // Manejar la respuesta del servidor, si es necesario
-        console.log('Producto agregado al carrito', response.data);
-      })
-      .catch((error) => {
-        console.error('Error al agregar el producto al carrito', error);
-      });
-  }
-}
+    actualizarCarrito(nuevoCarrito) {
+      this.carrito = nuevoCarrito;
+    },
+    
+    addToReserva(item, index) {
+    let me = this;
+    me.reservaForm.detallePedido.push({
+        id: null,
+        cantidad:me.cantidad,
+        producto: item,
+    });
+    console.log(me.reservaForm.detallePedido);
+
+      },
 
   },
   mounted() {
     this.fetchProductos();
-    //this.fetchCoberturas();
+   
     console.log(this.user);
   },
 };

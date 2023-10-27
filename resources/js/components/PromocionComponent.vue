@@ -17,7 +17,7 @@
                         <input type="search" v-model="search" @input="buscar" class="form-control rounded" placeholder="Buscar" arial-label="Search" aria-describedby="search-addon">
                       </div>
                     </div>
-                  
+
                       </div>
                     <div class="card-body">
                       <table class="table bordered">
@@ -48,8 +48,8 @@
                                   <button class="btn btn-danger btn-sm" @click="eliminar(item)">Eliminar</button>
                                   &nbsp;
                                   <button class="btn btn-success btn-sm" @click="(item)">Activa</button>
-                                  
-                                </td> 
+
+                                </td>
                               </tr>
                             </tbody>
                         </table>
@@ -120,7 +120,7 @@
     </div>
   </div>
   </template>
-  
+
   <script>
     export default{
           data(){
@@ -156,7 +156,7 @@
           }
         },
           methods:{
-               //para que no haga una peticion directa 
+               //para que no haga una peticion directa
               async fetchSabores(){
                   let me = this;
                   await this.axios.get('/sabores')
@@ -225,7 +225,7 @@
           //let me = this;         //el de abajo es operrador ternario
           me.sabor.nombre == ''  ? me.saborErrors.nombre = true :  me.saborErrors.nombre = false
           if(me.sabor.nombre){     //operador ternario
-                        // variable accion sera de agregar (add) y si no que actualice (upd)  
+                        // variable accion sera de agregar (add) y si no que actualice (upd)
             let accion = me.sabor.id == null ? "add" : "upd";
             if(accion == "add"){
               //guardar una marca (post en caso de agregar )
@@ -281,7 +281,7 @@
               }
             })
           },
-          //metodo para que muestre un msj y actualize la tabla cuando inserte una marca nueva  
+          //metodo para que muestre un msj y actualize la tabla cuando inserte una marca nueva
           verificarAccion(sabor, statusCode, accion){
             let me = this;
             const Toast = this.$swal.mixin({
@@ -335,6 +335,5 @@
             this.fetchSabores();
           },
       }
-      
+
   </script>
-  

@@ -92,7 +92,7 @@
           },
           computed:{
         formTitle(){
-            return this.catalogo.id == null ? "Agregar catalogo" : "Actualizar cataogo";
+            return this.catalogo.id == null ? "Agregar catalogo" : "Actualizar catalogo";
           },
           btnTitle(){
           return this.catalogo.id == null ? "Guardar" : "Actualizar";

@@ -31,11 +31,11 @@ import FormComponent from './components/pedidos/FormComponent.vue';
 import CatalogoComponent from './components/CatalogoComponent.vue';
 import CoberturaComponent from './components/CoberturaComponen.vue';
 import BancoComponent from './components/BancoComponent.vue';
-import CartComponent from './components/pedidos/CartComponent.vue';
+//import CartComponent from './components/pedidos/CartComponent.vue';
 //import PedidosList from './components/pedidos/PedidosList.vue';
 //import Paginacion from './components/pagination/Paginacion.vue' 
 //import Popupcart from './components/pedidos/Popupcart.vue';
-//import CartDropComponent from './components/pedidos/CartDropComponent.vue';
+import CartDropComponent from './components/pedidos/CartDropComponent.vue';
 
 
 app.component('example-component', ExampleComponent);
@@ -46,8 +46,8 @@ app.component('producto-component', ProductoComponent);
 app.component('form-component', FormComponent);
 app.component('catalogo-component', CatalogoComponent);
 app.component('cobertura-component', CoberturaComponent);
-app.component('cart-component', CartComponent);
-//app.component('cartdrop-component', CartDropComponent)
+//app.component('cart-component', CartComponent);
+app.component('cart-drop-component', CartDropComponent)
 //app.component('pedidos-list', PedidosList);
 //app.component('popupcart', Popupcart)
 

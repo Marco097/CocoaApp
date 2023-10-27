@@ -13,7 +13,7 @@
               <div class="collapse navbar-collapse position-relative" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item text-center">
-                        <a class="navbar-brand" style="color:#FFFFFF" href="#carouselExampleFade">Inicio</a>
+                        <a class="navbar-brand" style="color:#FFFFFF" href="{{url('/productos')}}">Inicio</a>
                     </li>
                     <li class="nav-item text-center">
                       <a class="navbar-brand" style="color: #FFFFFF; font-size: 19px;" href="{{ url('/productos') }}">productos</a>
