@@ -21,7 +21,7 @@ class SaborTest extends TestCase
         // Llama directamente a la función que deseas probar
         $sabores = $saborController->obtenerSabores();
 
-        // Verifica si $productos contiene los datos esperados
+        // Verifica si $sabores contiene los datos esperados
         $this->assertNotEmpty($sabores);
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Collection::class, $sabores);
 

@@ -114,4 +114,10 @@ class CatalogoController extends Controller
                     return $e->getMessage();
                  }  
     }
+
+    public function obtenerCatalogos()
+  {
+    $catalogos = Catalogo::all();
+    return $catalogos;
+  } 
 }

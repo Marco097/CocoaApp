@@ -111,6 +111,13 @@ class RellenoController extends Controller
          } catch(\Exception $e)
                  {
                     return $e->getMessage();
-                 }
+         }
     }
+
+    
+    public function obtenerRellenos()
+{
+    $rellenos = Relleno::all();
+    return $rellenos;
+}
 }

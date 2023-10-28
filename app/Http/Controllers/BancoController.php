@@ -111,4 +111,9 @@ class BancoController extends Controller
                     return $e->getMessage();
                  }
     }
+    public function obtenerBancos()
+{
+    $bancos = Banco::all();
+    return $bancos;
+}
 }

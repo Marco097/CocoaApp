@@ -115,4 +115,10 @@ class CoberturaController extends Controller
                     return $e->getMessage();
                  }
     }
+
+    public function obtenerCoberturas()
+    {
+    $coberturas = Cobertura::all();
+    return $coberturas;
+    } 
 }
