@@ -13,7 +13,7 @@ class EmailTest extends TestCase
         Mail::fake();
 
         $recipient = 'marco@gmail.com';
-        $subject = 'Gracias por preferirnos';
+        $subject = 'Gracias';
 
         // Supongamos que estás enviando un correo con ExampleEmail
         Mail::to($recipient)->send(new ExampleEmail());
