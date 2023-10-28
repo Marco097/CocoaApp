@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "486f9f301654051d0cb44a502ea5fcee",
+    "content-hash": "bc4a16e8c70cf8835eaafd54b54b8ebf",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -68,7 +68,6 @@
             },
             "require-dev": {
                 "php-coveralls/php-coveralls": "^2.2",
-                "phpunit/phpunit": "^9.0",
                 "vimeo/psalm": "5.0.0"
             },
             "type": "library",
@@ -126,7 +125,6 @@
             },
             "require-dev": {
                 "mockery/mockery": "^1.4.2",
-                "phpunit/phpunit": "^9.0",
                 "symfony/var-dumper": "5.1.5.*@dev"
             },
             "type": "library",
@@ -182,7 +180,7 @@
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1 || ^8.0"
+                "php": "^8.0"
             },
             "require-dev": {
                 "phpstan/phpstan": "^0.12.42",
@@ -257,7 +255,7 @@
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2 || ^8.0"
+                "php": "^8.0"
             },
             "require-dev": {
                 "doctrine/coding-standard": "^11.0",
@@ -353,7 +351,6 @@
             "require-dev": {
                 "doctrine/coding-standard": "^10",
                 "phpstan/phpstan": "^1.9",
-                "phpunit/phpunit": "^9.5",
                 "psalm/plugin-phpunit": "^0.18.3",
                 "vimeo/psalm": "^5.0"
             },
@@ -7062,16 +7059,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "10.3.2",
+            "version": "10.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "0dafb1175c366dd274eaa9a625e914451506bcd1"
+                "reference": "c4c60c34c0e92045afce938510f8878d7cd84f8a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/0dafb1175c366dd274eaa9a625e914451506bcd1",
-                "reference": "0dafb1175c366dd274eaa9a625e914451506bcd1",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c4c60c34c0e92045afce938510f8878d7cd84f8a",
+                "reference": "c4c60c34c0e92045afce938510f8878d7cd84f8a",
                 "shasum": ""
             },
             "require": {
@@ -7085,7 +7082,7 @@
                 "phar-io/manifest": "^2.0.3",
                 "phar-io/version": "^3.0.2",
                 "php": ">=8.1",
-                "phpunit/php-code-coverage": "^10.1.1",
+                "phpunit/php-code-coverage": "^10.0",
                 "phpunit/php-file-iterator": "^4.0",
                 "phpunit/php-invoker": "^4.0",
                 "phpunit/php-text-template": "^3.0",
@@ -7096,14 +7093,14 @@
                 "sebastian/diff": "^5.0",
                 "sebastian/environment": "^6.0",
                 "sebastian/exporter": "^5.0",
-                "sebastian/global-state": "^6.0.1",
+                "sebastian/global-state": "^6.0",
                 "sebastian/object-enumerator": "^5.0",
                 "sebastian/recursion-context": "^5.0",
                 "sebastian/type": "^4.0",
                 "sebastian/version": "^4.0"
             },
             "suggest": {
-                "ext-soap": "To be able to generate mocks based on WSDL files"
+                "ext-soap": "*"
             },
             "bin": [
                 "phpunit"
@@ -7111,7 +7108,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "10.3-dev"
+                    "dev-main": "10.0-dev"
                 }
             },
             "autoload": {
@@ -7142,8 +7139,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
-                "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.3.2"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.0.0"
             },
             "funding": [
                 {
@@ -7159,7 +7155,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-08-15T05:34:23+00:00"
+            "time": "2023-02-03T07:16:15+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -8514,5 +8510,5 @@
         "php": "^8.1"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

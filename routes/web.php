@@ -41,7 +41,8 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/admin', [HomeController::class,'dash'])->middleware('can:admin.dash')->name('admin.dash');//->middleware('auth.admin');
 Route::resource('sabores', SaborController::class)->middleware('can:admin.dash')->names('admin.sabores');
 Route::resource('users', UserController::class)->only(['index', 'edit', 'update'])->middleware('can:admin.dash')->names('admin.users');
- Route::resource('productos', ProductoController::class)->middleware('can:admin.dash')->names('admin.productos');
+Route::resource('productos', ProductoController::class)->names('admin.productos');
+
 
 Route::resource('rellenos', RellenoController::class)->middleware('can:admin.dash')->names('admin.rellenos');
 Route::resource('pedidos', PedidoController::class)->middleware('can:admin.dash')->names('admin.pedidos');

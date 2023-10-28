@@ -304,4 +304,10 @@ class ProductoController extends Controller
        }
        
     }
+
+    public function obtenerProductos()
+{
+    $productos = Producto::all();
+    return $productos;
+}
 }
